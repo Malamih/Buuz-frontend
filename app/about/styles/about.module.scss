@@ -1,0 +1,31 @@
+.about {
+  background-color: #e8e8e8;
+  padding: 100px 0;
+  .cards {
+    display: grid;
+    grid-template-columns: 300px 300px 1fr;
+    grid-template-rows: 150px 150px;
+    grid-template-areas:
+      "card-1 card-2 card-4 card-4"
+      "card-1 card-2 card-4 card-4"
+      "card-1 card-3 card-4 card-4";
+    gap: 1.5rem;
+    .card {
+      position: relative;
+      border-radius: 30px;
+      overflow: hidden;
+    }
+    .card1 {
+      grid-area: card-1;
+    }
+    .card2 {
+      grid-area: card-2;
+    }
+    .card3 {
+      grid-area: card-3;
+    }
+    .card4 {
+      grid-area: card-4;
+    }
+  }
+}

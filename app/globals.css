@@ -1,0 +1,42 @@
+@import "./tailwind.config.css";
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham/Gotham-XLight.otf") format("opentype");
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham/Gotham-Light.otf") format("opentype");
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham/Gotham-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham/Gotham-Bold.otf") format("opentype");
+  font-weight: 700; /* Bold */
+  font-display: swap;
+}
+
+:root {
+  --primary: #f3cf47;
+  --onPrimary: black;
+  --background: #0b0b0b;
+  --onBackground: white;
+}
+
+body {
+  font-family: "Gotham", sans-serif;
+  scrollbar-gutter: stable;
+  min-height: 100vh;
+}

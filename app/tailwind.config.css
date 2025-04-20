@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-onPrimary: var(--onPrimary);
+  --color-background: var(--background);
+  --color-onBackground: var(--onBackground);
+}
+
+@utility container {
+  margin: auto;
+  padding: 1.5rem;
+
+  @variant sm {
+    padding-inline: 2rem;
+  }
+
+  @variant lg {
+    padding-inline: 3rem;
+  }
+}
