@@ -34,8 +34,8 @@ export const AboutSection = () => {
               styles.card3
             )}
           >
-            <h1 className="font-bold text-5xl mb-4">25+</h1>
-            <p className="uppercase font-light text-xl">Years Of Experiance</p>
+            <h1 className="font-bold text-3xl mb-4 lg:text-5xl">25+</h1>
+            <p className="uppercase font-light text-lg lg:text-xl">Years Of Experiance</p>
           </div>
           <div
             className={twMerge(
@@ -44,11 +44,11 @@ export const AboutSection = () => {
               styles.card4
             )}
           >
-            <h2 className="uppercase mb-12 text-lg font-medium">Who We Are</h2>
-            <h1 className="font-bold text-5xl mb-12">
+            <h2 className="uppercase mb-12 text-sm sm:text-lg font-medium">Who We Are</h2>
+            <h1 className="font-bold text-4xl sm:text-5xl mb-12">
               Beez Production is an Iraqi video production
             </h1>
-            <p className="font-light text-xl text-justify">
+            <p className="font-light text-lg sm:text-xl text-justify">
               dedicated to redefining creativity and storytelling in the world
               of advertising. Specializing in high-quality TV commercials and
               imaginative creative concepts, we transform ordinary ideas into

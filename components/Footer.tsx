@@ -34,16 +34,20 @@ export const Footer = () => {
           </div>
         </div>
         <ul className="links flex-1">
-          <h1 className="font-[900] mb-6 text-2xl">Home</h1>
+          <h1 className="font-[900] mb-6 text-2xl">
+            <Link href={"/"}>
+              Home
+            </Link>
+          </h1>
           <div className="content flex flex-col gap-4">
             <li className="font-[500] text-2xl">
               <Link href={"/about"}>About us</Link>
             </li>
             <li className="font-[500] text-2xl">
-              <Link href={"/"}>Our services</Link>
+              <Link href={"/services"}>Our services</Link>
             </li>
             <li className="font-[500] text-2xl">
-              <Link href={"/"}>Portfolio</Link>
+              <Link href={"/portfolio"}>Portfolio</Link>
             </li>
             <li className="font-[500] text-2xl">
               <Link href={"/"}>Contact us</Link>

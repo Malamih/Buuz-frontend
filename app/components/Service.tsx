@@ -2,6 +2,7 @@ import ButtonArrow from "@/assets/icons/button-arrow.svg";
 import { ReactNode } from "react";
 import styles from "../styles/Services.module.scss";
 import { twMerge } from "tailwind-merge";
+import { Button } from "@/components/Button";
 
 type props = {
   icon: ReactNode;
@@ -11,7 +12,7 @@ type props = {
 
 export const Service = ({ icon, title, desc }: props) => {
   return (
-    <div className="service rounded-2xl pt-28 pb-4 px-4 w-full lg:w-[calc(47%-80px)] flex items-center justify-center gap-2 flex-col text-center border-2 border-[#191919] text-white">
+    <div className="service rounded-2xl pt-28 pb-4 px-4 w-full lg:w-[calc(50%-80px)] flex items-center justify-center gap-2 flex-col text-center border-2 border-[#3131318f]">
       <div className="icon mb-28 w-[200px] h-[200px] flex items-center justify-center relative">
         <div className="spheres w-full h-full absolute top-0 left-0">
           <div
@@ -41,12 +42,7 @@ export const Service = ({ icon, title, desc }: props) => {
           {desc}
         </p>
       </div>
-      <button className="py-1 cursor-pointer pl-4 self-end pr-1 border-2 border-[#2D2D2D] font-light rounded-full flex items-center gap-4">
-        <span>Contact us</span>
-        <div className="icon py-3 px-6 bg-[#2D2D2D] rounded-full">
-          <ButtonArrow className="scale-125" />
-        </div>
-      </button>
+      <Button content="Contact us" classes="border-[#696969]" iconClasses="bg-[#2D2D2D]" />
     </div>
   );
 };

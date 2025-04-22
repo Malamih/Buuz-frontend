@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { Reason } from "./Reason";
+import { twMerge } from "tailwind-merge";
 
-export const WhyUs = () => {
+export const WhyUs = ({ classes }: { classes?: string }) => {
   const reasons = [
     {
       title: "Innovative Storytelling",
@@ -46,7 +47,7 @@ export const WhyUs = () => {
     );
   });
   return (
-    <section className="bg-background text-onBackground overflow-hidden min-h-[90vh]">
+    <section className={twMerge("overflow-hidden pt-32 min-h-[90vh]", classes)}>
       <div className="container">
         <div className="title text-center font-extralight mb-28">
           <h1 className="mb-3 text-4xl">

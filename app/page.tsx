@@ -14,8 +14,8 @@ export default function Home() {
       <About />
       <Vision />
       <Value />
-      <Services />
-      <WhyUs />
+      <Services classes="bg-background text-onBackground" />
+      <WhyUs classes="bg-background text-onBackground" />
       <Portfolio />
       <PortfolioProjects />
     </>
