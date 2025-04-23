@@ -35,6 +35,11 @@
   --onBackground: white;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+  outline: none !important;
+}
+
 body {
   font-family: "Gotham", sans-serif;
   scrollbar-gutter: stable;
