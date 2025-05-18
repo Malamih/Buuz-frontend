@@ -1,5 +1,5 @@
-import { Page } from "../../components/Page";
-import { Content } from "./components/Content";
+import { Page } from "@/app/(dashboard)/components/Page";
+import { Content } from "@/app/(dashboard)/dashboard/clients/components/Content";
 
 const ClientsPage = () => {
   return (
