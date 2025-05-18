@@ -35,9 +35,7 @@ export const Footer = () => {
         </div>
         <ul className="links flex-1">
           <h1 className="font-[900] mb-6 text-2xl">
-            <Link href={"/"}>
-              Home
-            </Link>
+            <Link href={"/"}>Home</Link>
           </h1>
           <div className="content flex flex-col gap-4">
             <li className="font-[500] text-2xl">

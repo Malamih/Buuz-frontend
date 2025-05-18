@@ -30,9 +30,13 @@
 
 :root {
   --primary: #f3cf47;
+  --darkPrimary: #dab73a;
   --onPrimary: black;
-  --background: #0b0b0b;
+  --background: #ffffff;
   --onBackground: white;
+  --sidebar-width: 200px;
+  --header-height: 60px;
+  --dashboard-bg: #f5f6fa;
 }
 
 * {
@@ -42,6 +46,23 @@
 
 body {
   font-family: "Gotham", sans-serif;
+  background-color: white;
+  overscroll-behavior: none;
+  will-change: scroll-position;
+}
+
+.dashboardLayout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) auto;
+  grid-template-rows: var(--header-height) auto;
+  grid-template-areas: "sidebar header" "sidebar content";
+  background: #dab73a2c;
+}
+
+.whiteIcon {
+  fill: white;
+}
+
+html {
   scrollbar-gutter: stable;
-  min-height: 100vh;
 }
