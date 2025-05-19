@@ -9,8 +9,6 @@ import {
 import LogoutIcon from "@/assets/icons/logout.svg";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import SettingsIcon from "@/assets/icons/settings.svg";
-import Link from "next/link";
 
 export const Header = () => {
   const pathname = usePathname();
