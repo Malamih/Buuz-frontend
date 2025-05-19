@@ -1,14 +1,11 @@
-import { Page } from "../../components/Page";
 import { Content } from "./components/Content";
 
-const ImportPage = () => {
+export default function ImportPage() {
   return (
     <>
-      <Page>
+      <div className="page p-4 bg-white m-2 shadow rounded-2xl">
         <Content />
-      </Page>
+      </div>
     </>
   );
-};
-
-export default ImportPage;
+}

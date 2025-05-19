@@ -13,8 +13,6 @@ import { queryClient } from "@/providers/QueryProvider";
 import { editValue } from "@/services/values";
 import { Value } from "@/types/values";
 import clsx from "clsx";
-import { PlusIcon } from "lucide-react";
-import { title } from "process";
 import { useState } from "react";
 import { toast } from "sonner";
 

@@ -1,14 +1,10 @@
-import { Page } from "@/app/(dashboard)/components/Page";
-import { Content } from "@/app/(dashboard)/dashboard/clients/components/Content";
-
-const ClientsPage = () => {
+export default function ClientsPage() {
   return (
     <>
-      <Page>
-        <Content />
-      </Page>
+      <div className="page p-4 bg-white m-2 shadow rounded-2xl">
+        {/* <Content /> */}
+        <h1>clients page</h1>
+      </div>
     </>
   );
-};
-
-export default ClientsPage;
+}

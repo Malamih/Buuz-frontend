@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTrigger,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +16,6 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createValue, deleteValue, getValues } from "@/services/values";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { MoreVertical, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";

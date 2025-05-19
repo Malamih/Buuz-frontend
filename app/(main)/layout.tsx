@@ -19,14 +19,14 @@ export default function MainLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>
-        <Toaster />
+        {/* <Toaster />
         <QueryProvider>
           <LensiProvider>
             <Header />
             {children}
             <Footer />
           </LensiProvider>
-        </QueryProvider>
+        </QueryProvider> */}
       </body>
     </html>
   );

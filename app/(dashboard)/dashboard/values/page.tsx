@@ -1,11 +1,10 @@
-import { Page } from "../../components/Page";
 import { Content } from "./components/Content";
 
 const ValuesPage = () => {
   return (
-    <Page>
+    <div className="page p-4 bg-white m-2 shadow rounded-2xl">
       <Content />
-    </Page>
+    </div>
   );
 };
 

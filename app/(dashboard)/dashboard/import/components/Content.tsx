@@ -1,17 +1,8 @@
 "use client";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useFetchVideos } from "@/services/vimeo";
-import { toast } from "sonner";
 import { ManyVideos } from "./ManyVideos";
-import { SingleVideo } from "./SingleVideo";
 import { Loader } from "@/components/loader";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
@@ -66,19 +57,6 @@ export const Content = () => {
         <Link href={"/dashboard"} className="flex items-center gap-2 underline">
           Projects <ArrowRightIcon width={20} />
         </Link>
-        {/* <Select
-          onValueChange={(value) =>
-            setFetchingType(value as "single" | "multiple")
-          }
-          defaultValue="multiple"
-        >
-          <SelectTrigger className="w-[180px] bg-white cursor-pointer">
-            <SelectValue placeholder="Single" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="multiple">Multiple Projects</SelectItem>
-          </SelectContent>
-        </Select> */}
       </div>
       <div className="projects mt-8">
         {!payload?.data && (

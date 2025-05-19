@@ -1,12 +1,9 @@
-import { Page } from "../components/Page";
 import { Content } from "../components/Content";
 
-const DashboardPage = () => {
+export default function DashboardPage() {
   return (
-    <Page>
+    <div className="page p-4 bg-white m-2 shadow rounded-2xl">
       <Content />
-    </Page>
+    </div>
   );
-};
-
-export default DashboardPage;
+}

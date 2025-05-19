@@ -1,9 +1,9 @@
 import React from "react";
 import "../globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
-import { Toaster } from "sonner";
 
 export default function DashboardLayout({
   children,
