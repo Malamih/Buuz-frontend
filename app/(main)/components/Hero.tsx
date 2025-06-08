@@ -45,7 +45,7 @@ export const Hero = () => {
   }, []);
   return (
     <>
-      <div className="hero h-[calc(100vh-200px)] md:h-[calc(100vh-90px)] bg-black overflow-hidden">
+      <div className="hero relative h-[calc(100vh-200px)] md:h-[calc(100vh-90px)] bg-black overflow-hidden">
         <div className="bg absolute top-0 left-0 w-full h-full z-[0] pointer-events-none">
           <video
             src={"/bg-video.mp4"}

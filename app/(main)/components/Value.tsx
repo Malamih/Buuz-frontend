@@ -2,7 +2,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { getValues } from "@/services/values";
 import clsx from "clsx";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 
 export const ValueEl = () => {
@@ -15,12 +15,6 @@ export const ValueEl = () => {
         i == 0 ? { ...e, active: true } : { ...e, active: false }
       );
       setValues(activeValues);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data?.payload) {
-      ScrollTrigger.refresh();
     }
   }, [data]);
 
@@ -39,7 +33,7 @@ export const ValueEl = () => {
     <section className="value py-16 bg-gray-100">
       <div className="container">
         <ul className="values flex overflow-auto relative">
-          {isFetching && (
+          {(isFetching || !data || error) && (
             <li className="border-b-4 relative select-none z-[1] border-transparent py-6 px-12 font-light cursor-pointer hover:bg-gray-200 transition-all duration-200 text-gray-500 text-xl capitalize">
               <Skeleton className="w-[100px] h-[50px] bg-gray-300" />
             </li>

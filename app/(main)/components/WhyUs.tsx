@@ -46,73 +46,50 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
   const container = useRef<HTMLDivElement>(null);
   const reasonsWrapper = useRef<HTMLDivElement>(null);
 
-  // تكوين ScrollTrigger لأجهزة iOS
   useEffect(() => {
-    // إعداد ScrollTrigger بشكل أفضل لأجهزة iOS
     ScrollTrigger.config({
       autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize",
     });
-
-    // التحقق مما إذا كان الجهاز يستخدم iOS
     const isIOS =
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !("MSStream" in window);
 
     if (isIOS) {
-      // إضافة فئة CSS خاصة بأجهزة iOS
       document.documentElement.classList.add("is-ios");
-
-      // ضبط إعدادات ScrollTrigger الافتراضية لأجهزة iOS
       ScrollTrigger.defaults({
         preventOverlaps: true,
         fastScrollEnd: true,
         onUpdate: (self) => {
-          // استخدام استدعاء requestAnimationFrame لتحسين الأداء
           if (!self.isActive) return;
-          window.requestAnimationFrame(() => {
-            // تنفيذ أي تحديثات هنا إذا لزم الأمر
-          });
+          window.requestAnimationFrame(() => {});
         },
       });
     }
-
-    // تنظيف عند إلغاء التركيب
     return () => {
-      // إيقاف أي ScrollTrigger مفعلة
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
   useGSAP(() => {
-    // استخدام setTimeout بدل setInterval لتجنب معالجة كثيرة غير ضرورية
-    // وأيضاً نقلل وقت التحديث إلى مرة واحدة فقط بعد تحميل الصفحة
-    const refreshTimeout = setTimeout(() => {
-      ScrollTrigger.refresh(true); // تحديث كامل مرة واحدة
-    }, 1000);
-
-    // إنشاء timeline للصورة
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container.current,
-        scrub: 0.3, // قيمة أعلى من صفر لتنعيم الحركة في iOS
+        scrub: true,
       },
     });
-
-    // تثبيت الصورة أثناء التمرير
     if (imageRef.current) {
       tl.to(imageRef.current, {
         scrollTrigger: {
           pin: true,
           trigger: imageRef.current,
-          scrub: 0.3, // تنعيم أكثر
+          scrub: 0.7,
           anticipatePin: 1,
           start: "top 120px",
-          fastScrollEnd: true, // تحسين أداء iOS
-          invalidateOnRefresh: true, // مهم للأجهزة المحمولة
+          fastScrollEnd: true,
+          invalidateOnRefresh: true,
+          end: "+=800",
         },
       });
     }
-
-    // تحريك عناصر الأسباب
     const reasons = reasonsWrapper.current?.querySelectorAll(".reason");
     if (reasons) {
       reasons.forEach((r) => {
@@ -122,19 +99,14 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
           x: 0,
           scrollTrigger: {
             trigger: r,
-            scrub: 0.3, // تنعيم أكثر
-            start: "top 80%", // بدء مبكر قليلا
+            scrub: 0.3,
+            start: "top 100%",
             end: "top 50%",
-            toggleActions: "play none none reverse", // تحسين على iOS
+            toggleActions: "play none none reverse",
           },
         });
       });
     }
-
-    // تنظيف
-    return () => {
-      clearTimeout(refreshTimeout);
-    };
   }, [container]);
 
   return (
@@ -175,7 +147,8 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
             })}
           </div>
           <div
-            className="image w-[50%] hidden lg:inline-block rounded-bl-[100px] overflow-hidden h-[calc(95vh-110px)] shadow-lg"
+            className="image w-[50%] hidden lg:inline-block rounded-bl-[100px] overflow-hidden h-[calc(100%-110px)] shadow-lg"
+            style={{ willChange: "transform", backfaceVisibility: "hidden" }}
             ref={imageRef}
           >
             <Image

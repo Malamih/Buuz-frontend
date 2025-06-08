@@ -1,11 +1,12 @@
 "use client";
 import { useGetProjects } from "@/services/projects";
-import { PlayIcon } from "lucide-react";
+import { PauseIcon, PlayIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { ProjectSkeleton } from "./ProjectSkeleton";
+import clsx from "clsx";
 
 export const Projects = () => {
   const { id } = useParams();
@@ -31,8 +32,16 @@ export const Projects = () => {
                   key={i}
                 >
                   <div className="thumbnail relative w-full rounded-[25px] overflow-hidden">
-                    <button className="absolute z-10 scale-0 top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 w-[50px] h-[50px] bg-white flex items-center justify-center rounded-full text-black hover:bg-darkPrimary hover:text-white cursor-pointer transition duration-200">
-                      <PlayIcon />
+                    <button
+                      className={clsx(
+                        "absolute z-10 top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 w-[50px] h-[50px] bg-white flex items-center justify-center rounded-full text-black hover:bg-darkPrimary hover:text-white cursor-pointer transition duration-200",
+                        {
+                          "scale-1": project.id == id,
+                          "scale-0": project._id != id,
+                        }
+                      )}
+                    >
+                      {project._id == id ? <PauseIcon /> : <PlayIcon />}
                     </button>
                     <Image
                       src={project.thumbnail}

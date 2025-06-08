@@ -1,13 +1,11 @@
 "use client";
 import Image from "next/image";
-import ProjectsIcon from "@/assets/icons/project.svg";
-import ValuesIcon from "@/assets/icons/value.svg";
-import ClientsIcon from "@/assets/icons/client.svg";
 import Link from "next/link";
 import styles from "../styles/sidebar.module.scss";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+import { BadgeCheck, ClipboardEdit, File, FileText, Users } from "lucide-react";
 
 export const Sidebar = () => {
   const pathname = usePathname();
@@ -15,51 +13,31 @@ export const Sidebar = () => {
     {
       name: "Projects",
       path: "/dashboard",
-      icon: <ProjectsIcon />,
+      icon: <ClipboardEdit width={18} />,
     },
     {
       name: "Values",
       path: "/dashboard/values",
-      icon: <ValuesIcon />,
+      icon: <BadgeCheck width={18} />,
     },
     {
       name: "Clients",
       path: "/dashboard/clients",
-      icon: <ClientsIcon />,
+      icon: <Users width={18} />,
     },
   ];
-  // const pagesGroupLinks = [
-  //   {
-  //     name: "Home",
-  //     links: [
-  //       {
-  //         name: "Projects",
-  //         path: "/dashboard/home/projects",
-  //         icon: <ProjectsIcon width={20} />,
-  //       },
-  //       {
-  //         name: "Values",
-  //         path: "/dashboard/home/values",
-  //         icon: <ValuesIcon width={20} />,
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     name: "Services",
-  //     links: [
-  //       {
-  //         name: "Projects",
-  //         path: "/dashboard/home/projects",
-  //         icon: <ProjectsIcon width={20} />,
-  //       },
-  //       {
-  //         name: "Values",
-  //         path: "/dashboard/home/values",
-  //         icon: <ValuesIcon width={20} />,
-  //       },
-  //     ],
-  //   },
-  // ];
+  const pagesLinks = [
+    {
+      name: "Home",
+      path: "/dashboard/content/home",
+      icon: <File width={18} />,
+    },
+    // {
+    //   name: "About",
+    //   path: "/dashboard/content/about",
+    //   icon: <File width={18} />,
+    // },
+  ];
   return (
     <aside
       className={twMerge(
@@ -96,35 +74,28 @@ export const Sidebar = () => {
             );
           })}
         </div>
-        {/* <span className="px-4 py-2 inline-block font-light text-sm text-gray-900">
+        <span className="px-4 py-2 inline-block font-light text-sm text-gray-900">
           Pages
         </span>
-        {pagesGroupLinks.map((page, i: number) => {
+        {pagesLinks.map((link, i: number) => {
           return (
-            <ul className="links" key={i}>
-              <h1 className="pl-6 text-[.9rem]">{page.name}</h1>
-              {page.links.map((link, i: number) => {
-                return (
-                  <li key={i} className="w-full pl-8 mb-2">
-                    <Link
-                      href={link.path}
-                      className={clsx(
-                        "flex items-center gap-2 w-[90%] rounded-sm p-2 text-sm",
-                        styles.link,
-                        {
-                          [styles.active]: pathname == link.path,
-                        }
-                      )}
-                    >
-                      <div className="icon">{link.icon}</div>
-                      <div className="value">{link.name}</div>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            <li key={i} className="w-full pl-8 mb-2">
+              <Link
+                href={link.path}
+                className={clsx(
+                  "flex items-center gap-2 w-[90%] rounded-sm p-2 text-sm",
+                  styles.link,
+                  {
+                    [styles.active]: pathname == link.path,
+                  }
+                )}
+              >
+                <div className="icon">{link.icon}</div>
+                <div className="value">{link.name}</div>
+              </Link>
+            </li>
           );
-        })} */}
+        })}
       </ul>
     </aside>
   );

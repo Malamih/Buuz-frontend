@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/Button";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 type props = {
   icon: ReactNode;
@@ -19,7 +20,7 @@ export const Service = ({ icon, title, desc }: props) => {
   const iconEl = useRef(null);
 
   useEffect(() => {
-    ScrollTrigger.refresh();
+    // ScrollTrigger.refresh();
     if (
       !titleEl.current ||
       !descEl.current ||
@@ -56,7 +57,7 @@ export const Service = ({ icon, title, desc }: props) => {
   }, []);
   return (
     <div
-      className="service rounded-2xl pt-28 pb-4 px-4 w-full lg:w-[calc(50%-40px)] flex items-center justify-center gap-2 flex-col text-center border-2 border-[#31313156]"
+      className={twMerge("service rounded-2xl pt-28 pb-4 px-4 w-full lg:w-[calc(50%-40px)] flex items-center justify-center gap-2 flex-col text-center border-2 border-[#31313156]", styles.serviceContainer)}
       ref={container}
     >
       <div
@@ -99,11 +100,13 @@ export const Service = ({ icon, title, desc }: props) => {
           {desc}
         </p>
       </div>
-      <Button
-        content="Contact us"
-        classes="border-[#696969]"
-        iconClasses="bg-[#2D2D2D]"
-      />
+      <Link href={"/contact-us"} className="self-end">
+        <Button
+          content="Contact us"
+          classes="border-[#696969]"
+          iconClasses="bg-[#2D2D2D]"
+        />
+      </Link>
     </div>
   );
 };

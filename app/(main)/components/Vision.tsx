@@ -1,4 +1,8 @@
+"use client";
+import { useMainStore } from "@/stores/main";
+
 export const Vision = () => {
+  const { pageContent } = useMainStore((state) => state);
   return (
     <section className="vission py-10 bg-white">
       <div className="container">
@@ -14,10 +18,7 @@ export const Vision = () => {
           ></video>
         </div>
         <p className="font-light text-xl text-center md:text-left">
-          We aim to be the most innovative and influential video production
-          company in Iraq, known for our cutting-edge creativity and
-          high-quality content. Our goal is to create commercials that go beyond
-          promotion and become memorable experiences.
+          {pageContent?.home?.our_vision_and_values}
         </p>
       </div>
     </section>

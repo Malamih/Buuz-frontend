@@ -13,6 +13,7 @@ export interface Project {
   video_uri: string;
   _id: string;
   project_id: string;
+  id: string;
 }
 
 export interface ProjectResponse {
@@ -22,14 +23,17 @@ export interface ProjectResponse {
 
 export const useFetchVideos = (
   id: string,
-  fetchingType: "single" | "multiple"
+  fetchingType: "single" | "multiple",
+  params: {}
 ) => {
   let url =
     fetchingType == "multiple" ? `/users/${id}/videos` : `/videos/${id}`;
+  const endpoint = new vimeoApiClient<any, any>(url);
   return useQuery({
-    queryKey: ["vimeo", id],
-    queryFn: () => id != "" && new vimeoApiClient<any, any>(url).get(),
+    queryKey: ["vimeo", id, params],
+    queryFn: endpoint.get,
     retry: false,
+    meta: { params: { ...params } },
   });
 };
 

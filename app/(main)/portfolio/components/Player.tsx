@@ -35,12 +35,20 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
 
   const { data, isFetching, error }: any = useQuery({
     queryFn: () => getProject(id),
-    queryKey: ["project"],
+    queryKey: ["project", id],
   });
 
   useEffect(() => {
     const vh = window.innerHeight * 0.01;
     if (!playerRef.current || !data?.project) return;
+    if (player.current) {
+      player.current
+        .destroy()
+        .then(() => {
+          player.current = null;
+        })
+        .catch(console.error);
+    }
     player.current = new Player(playerRef.current, {
       url: data?.project?.video,
       keyboard: true,
@@ -60,11 +68,11 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
     });
     return () => {
       if (!player.current) return;
-      player.current.unload();
+      player.current.destroy().catch(console.error);
+      player.current = null;
       setIsLoaded(false);
     };
-  }, [data?.project]);
-
+  }, [id, data]); // Add id to dependencies
   const hover = () => {
     if (!playIcon.current || !content.current) return;
     gsap.to(playIcon.current, {

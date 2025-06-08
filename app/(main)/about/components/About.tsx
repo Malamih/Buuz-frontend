@@ -29,7 +29,7 @@ export const AboutSection = () => {
         trigger: container.current,
         scrub: 1,
         end: "top 10%",
-        start: "bottom bottom",
+        start: "top bottom",
       },
     });
     tl.to(firstCard.current, {

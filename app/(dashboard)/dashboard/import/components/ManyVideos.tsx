@@ -1,6 +1,5 @@
 import { formatShortDateTime } from "@/lib/date";
 import Image from "next/image";
-import AddIcon from "@/assets/icons/add.svg";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,11 +12,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ProjectResponse, useUploadProject } from "@/services/vimeo";
-import { useRef } from "react";
+import { Project, ProjectResponse, useUploadProject } from "@/services/vimeo";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { extractId } from "@/helpers/vimeo";
+import { PlusIcon } from "lucide-react";
 
 export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
+  const [newProjects, setNewProjects] = useState([] as Project[]);
   const inputs = [
     {
       name: "description",
@@ -54,6 +56,9 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
 
   const success = (response: ProjectResponse) => {
     const dialogRef = dialogRefs.current.get(response.project.video_uri);
+    const projects = [...newProjects];
+    projects.push(response.project);
+    setNewProjects(projects);
     if (dialogRef) {
       dialogRef.click();
     }
@@ -115,12 +120,16 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
               <div className="options">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <button
-                      className="add-project flex items-center py-2 px-3 rounded-xs cursor-pointer hover:bg-primary justify-center bg-darkPrimary"
+                    <Button
+                      className="add-project flex items-center p-0 rounded-sm cursor-pointer hover:bg-primary justify-center bg-darkPrimary"
                       ref={setDialogRef(project.uri)}
+                      disabled={
+                        newProjects.filter((p) => p.video_uri == project.uri)
+                          .length > 0
+                      }
                     >
-                      <AddIcon />
-                    </button>
+                      <PlusIcon />
+                    </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[767px] bg-white">
                     <form onSubmit={(e) => create(e, project)}>
@@ -164,7 +173,11 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
                         })}
                       </div>
                       <DialogFooter className="pt-4">
-                        <Button type="submit" className="w-full cursor-pointer">
+                        <Button
+                          type="submit"
+                          className="w-full cursor-pointer"
+                          disabled={isPending}
+                        >
                           {isPending ? "Adding..." : "Add"}
                         </Button>
                       </DialogFooter>

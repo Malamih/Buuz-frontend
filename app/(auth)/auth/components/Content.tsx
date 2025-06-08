@@ -5,19 +5,23 @@ import { useLogin } from "@/services/auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { EyeClosed, EyeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Content = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
 
   const success = () => {
     router.push("/dashboard");
+    setIsPending(false);
   };
 
-  const { mutate, isPending, error }: any = useLogin(success);
+  const { mutate, error }: any = useLogin(success);
 
   const login = (e: any) => {
     e.preventDefault();
+    setIsPending(true);
     const form = new FormData(e.target);
     const userData = {
       email: form.get("email"),
@@ -64,7 +68,7 @@ export const Content = () => {
                 name="email"
               />
               {error?.fieldErrors?.email && (
-                <span className="text-red-400 text-sm">
+                <span className="text-red-400 text-xs">
                   {error?.fieldErrors?.email}
                 </span>
               )}
@@ -87,12 +91,13 @@ export const Content = () => {
                 </div>
               </div>
               {error?.fieldErrors?.password && (
-                <span className="text-red-400 text-sm">
+                <span className="text-red-400 text-xs">
                   {error?.fieldErrors?.password}
                 </span>
               )}
             </div>
-            <button
+            <Button
+              disabled={isPending}
               type="submit"
               onSubmit={(e) => {
                 e.preventDefault();
@@ -100,7 +105,7 @@ export const Content = () => {
               className="w-full bg-black text-white mt-4 py-2 cursor-pointer"
             >
               {isPending ? "Please wait..." : "Login"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

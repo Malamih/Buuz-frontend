@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Projects } from "./Projects";
 import gsap from "gsap";
+import { useMainStore } from "@/stores/main";
 
 export const About = () => {
   const container = useRef<HTMLDivElement>(null);
@@ -11,7 +12,7 @@ export const About = () => {
   const textBlock1 = useRef(null);
   const textBlock2 = useRef(null);
   const textBlock3 = useRef(null);
-
+  const { pageContent } = useMainStore((state) => state);
   useEffect(() => {
     if (
       !container.current ||
@@ -26,9 +27,7 @@ export const About = () => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: container.current,
-        scrub: 1,
-        start: "top 70%",
-        end: "top 10%",
+        start: "top 40%",
       },
     });
     tl.to(title.current, {
@@ -104,22 +103,13 @@ export const About = () => {
                 className="text-justify -translate-x-24 opacity-0"
                 ref={textBlock1}
               >
-                Beez Production is an Iraqi video production and marketing
-                agency dedicated to redefining creativity and storytelling in
-                the world of advertising. Specializing in high-quality TV
-                commercials and imaginative creative concepts, we transform
-                ordinary ideas into extraordinary visuals that leave lasting
-                impressions
+                {pageContent?.home?.who_are_we}
               </p>
             </div>
           </div>
           <div className="mission text-xl font-light w-full max-w-[700px]">
             <p className="mb-16 -translate-x-24 opacity-0" ref={textBlock2}>
-              We are your creative powerhouse, here to turn your ideas into
-              visual masterpieces. Whether it’s engaging TV commercials or
-              innovative creative concepts, we bring your vision to life with
-              creativity, passion, and professionalism. Let’s create the buzz
-              your brand deserves!
+              {pageContent?.home?.about_us}
             </p>
             <div className="content">
               <h2
@@ -129,10 +119,7 @@ export const About = () => {
                 Our Mission
               </h2>
               <p ref={textBlock3} className="-translate-x-24 opacity-0">
-                To elevate Iraqi TV commercials to new levels of creativity and
-                directing. We believe every brand has a story to tell, and our
-                job is to make sure your audience not only hears it but feels
-                it.
+                {pageContent?.home?.our_mission}
               </p>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "https://api.vimeo.com/";
+export const BASE_URL = "https://api.vimeo.com";
 export const VIMEO_TOKEN = "fdbc3fc2c18dc47fcb908aeaaf433e4f";
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

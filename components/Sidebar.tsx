@@ -20,13 +20,15 @@ export const Sidebar = () => {
   const burgerIcon = useRef<HTMLButtonElement>(null);
   const aside = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const linksWrapper = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     if (
       !firstLine.current ||
       !secondLine.current ||
       !lastLine.current ||
-      !aside.current
+      !aside.current ||
+      !linksWrapper.current
     )
       return;
     const tl = gsap.timeline({});
@@ -63,11 +65,24 @@ export const Sidebar = () => {
         "<"
       );
 
+      // sidebar
+      const sidebarLinks = linksWrapper.current?.querySelectorAll(".link");
+      if (sidebarLinks) {
+        tl.to(
+          sidebarLinks,
+          {
+            x: 0,
+            stagger: 0.05,
+            delay: 0.2,
+          },
+          0
+        );
+      }
       tl.to(
         aside.current,
         {
           left: 0,
-          delay: 0.1,
+          duration: 0.5,
         },
         0
       );
@@ -103,11 +118,23 @@ export const Sidebar = () => {
       );
 
       // sidebar
+      const sidebarLinks = linksWrapper.current?.querySelectorAll(".link");
+      if (sidebarLinks) {
+        tl.to(
+          sidebarLinks,
+          {
+            x: -100,
+            stagger: 0.05,
+          },
+          0
+        );
+      }
       tl.to(
         aside.current,
         {
           left: "-500px",
-          delay: 0.1,
+          duration: 0.5,
+          ease: "power1.in",
         },
         0
       );
@@ -192,18 +219,24 @@ export const Sidebar = () => {
             <XIcon className="scale-[1.4]" />
           </button>
         </header>
-        <ul className="links flex-[1] py-2 px-8 text-3xl flex flex-col gap-4">
+        <ul
+          className="links flex-[1] py-2 px-8 text-3xl flex flex-col gap-4"
+          ref={linksWrapper}
+        >
           {links.map((link, i: number) => {
             return (
               <li key={i}>
                 <Link
                   href={link.path}
-                  className={clsx("hover:underline", {
-                    underline:
-                      pathname == link.path ||
-                      (pathname.includes("portfolio") &&
-                        link.path.includes("portfolio")),
-                  })}
+                  className={clsx(
+                    "hover:underline link translate-x-[-100] inline-block",
+                    {
+                      underline:
+                        pathname == link.path ||
+                        (pathname.includes("portfolio") &&
+                          link.path.includes("portfolio")),
+                    }
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   <span>{link.name}</span>

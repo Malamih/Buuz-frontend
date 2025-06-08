@@ -24,7 +24,7 @@ export const Header = () => {
   return (
     <header
       style={{ gridArea: "header" }}
-      className="h-full flex items-center justify-between px-4 pr-10 sticky top-0 left-0 bg-white border-b border-b-gray-300"
+      className="h-full flex items-center justify-between px-4 pr-10 sticky top-0 left-0 bg-white border-b border-b-gray-300 z-10"
     >
       <h1 className="text-lg capitalize">
         {pageName == "dashboard" ? "Projects" : pageName}
