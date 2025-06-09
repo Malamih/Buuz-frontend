@@ -24,6 +24,17 @@ export const useLogin = (successCallback: () => void) => {
   });
 };
 
+export const useCheckAuth = (scss: (msg: string) => void) => {
+  const endpoint = new ApiClient<any, any>("/admin/checkAuth");
+  return useMutation({
+    mutationFn: endpoint.post,
+    mutationKey: ["auth"],
+    onSuccess: (data) => {
+      scss(data.message);
+    },
+  });
+};
+
 export const useLogout = (successCallback: () => void) => {
   Cookies.remove("token");
   successCallback();

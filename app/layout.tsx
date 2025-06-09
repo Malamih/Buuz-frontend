@@ -4,6 +4,7 @@ import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
 import { PageContentHandler } from "@/components/PageContentHanlder";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const metadata: Metadata = {
   title: "Beez production",
@@ -25,7 +26,7 @@ export default function MainLayout({
         <Toaster />
         <QueryProvider>
           <PageContentHandler />
-          {children}
+          <ProtectedRoute>{children}</ProtectedRoute>
         </QueryProvider>
       </body>
     </html>
