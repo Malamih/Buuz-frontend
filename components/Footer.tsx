@@ -62,8 +62,8 @@ export const Footer = () => {
         </div>
       </div>
       <div className="copyright mt-16">
-        <p className="font-light text-lg text-center">
-          Copyright 2024.{" "}
+        <p className="font-light text-sm text-center">
+          Copyright 2025.{" "}
           <b>
             <Link
               href={"https://www.instagram.com/malamihnet/"}

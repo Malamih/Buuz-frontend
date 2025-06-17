@@ -61,7 +61,7 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
       url: data?.project?.video,
       keyboard: true,
       playsinline: true,
-      height: vh * 60,
+      height: vh * 65,
       controls: fullscreen,
     });
 
@@ -82,6 +82,7 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
     player.current.on("fullscreenchange", (e) => {
       setFullscreen(e.fullscreen);
     });
+
     return () => {
       if (!player.current) return;
       player.current.destroy().catch(console.error);
@@ -144,30 +145,26 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
         <div className="default w-[99%] m-auto">
           <div className="video relative flex justify-center rounded-tl-[100px] rounded-br-[100px] overflow-hidden w-full">
             <div
-              className="video w-full h-[60vh]"
+              className="video w-fit rounded-br-[100px] rounded-tl-[100px] overflow-hidden relative flex justify-center"
               onMouseLeave={hideElements}
               onMouseEnter={hover}
             >
               {!isLoaded && <VideoPlayerSkeleton />}
               <div
-                className={twMerge(
-                  "video-player relative w-fit h-fit m-auto rounded-br-[100px] rounded-tl-[100px] overflow-hidden z-0 flex items-center justify-center",
-                  styles.player
-                )}
+                className={twMerge("w-fit relative", styles.player)}
                 ref={playerRef}
-              >
-                {isLoaded && (
-                  <button
-                    className={clsx(
-                      "fullscreen absolute top-4 right-4 z-10 hover:text-primary text-white w-[60px] h-[60px] rounded-full flex items-center justify-center hover:bg-[#ffffff30] transition duration-150 cursor-pointer"
-                    )}
-                    onClick={handleFullscreen}
-                    ref={fullscreenButton}
-                  >
-                    <LucideFullscreen width={40} height={40} />
-                  </button>
-                )}
-              </div>
+              ></div>
+              {isLoaded && (
+                <button
+                  className={clsx(
+                    "fullscreen absolute top-4 right-4 z-10 hover:text-primary text-white w-[60px] h-[60px] rounded-full flex items-center justify-center hover:bg-[#ffffff30] transition duration-150 cursor-pointer"
+                  )}
+                  onClick={handleFullscreen}
+                  ref={fullscreenButton}
+                >
+                  <LucideFullscreen width={40} height={40} />
+                </button>
+              )}
               <div
                 className={clsx(
                   "playIcon cursor-pointer hover:text-primary transition duration-100 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4",

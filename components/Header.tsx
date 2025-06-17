@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <>
       <header className="bg-white h-[90px] flex items-center z-[100] sticky top-0 left-0">
-        <div className="container px-0 flex items-center justify-between gap-2">
+        <div className="container px-0 flex items-center justify-between gap-2 py-0 h-full">
           <Sidebar />
           <div className="logo flex-1 w-full flex items-center justify-center">
             <Link href={"/"} className="">

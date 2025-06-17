@@ -75,7 +75,8 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
     const existingTriggers = ScrollTrigger.getAll().filter(
       (trigger) =>
         trigger.vars.trigger &&
-        (trigger.vars.trigger instanceof Element && trigger.vars.trigger.classList.contains("reason"))
+        trigger.vars.trigger instanceof Element &&
+        trigger.vars.trigger.classList.contains("reason")
     );
     existingTriggers.forEach((trigger) => trigger.kill());
 
@@ -119,7 +120,7 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
             className="reasons flex-1 pt-24 pb-24 relative z-10"
             ref={reasonsWrapper}
           >
-            {reasons.map((reason, i: number) => {
+            {reasons?.map((reason, i: number) => {
               return (
                 <div
                   className="reason flex relative gap-5 min-h-[300px] mb-8 opacity-0 translate-y-[200px]"
