@@ -15,11 +15,18 @@ import { Label } from "@/components/ui/label";
 import { Project, ProjectResponse, useUploadProject } from "@/services/vimeo";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { extractId } from "@/helpers/vimeo";
 import { PlusIcon } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
   const [newProjects, setNewProjects] = useState([] as Project[]);
+  const [type, setType] = useState("");
   const inputs = [
     {
       name: "description",
@@ -40,7 +47,37 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
       placeholder: "Project type...",
       id: "type",
       label: "Type",
-      type: "input",
+      type: "select",
+      options: [
+        {
+          name: "Commercial",
+          value: "commercial",
+        },
+        {
+          name: "Films",
+          value: "films",
+        },
+        {
+          name: "Short Films",
+          value: "short-films",
+        },
+        {
+          name: "Series",
+          value: "series",
+        },
+        {
+          name: "TV Programs",
+          value: "tv-programs",
+        },
+        {
+          name: "Video Clip",
+          value: "video-clip",
+        },
+        {
+          name: "Sketch",
+          value: "sketch",
+        },
+      ],
     },
   ];
 
@@ -79,7 +116,7 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
     const projectData = {
       client: form.get("client"),
       description: form.get("description"),
-      type: form.get("type"),
+      type: type,
       created_time: videoData.created_time,
       thumbnail: videoData.pictures.base_link,
       title: videoData.name,
@@ -133,7 +170,7 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[767px] bg-white">
                     <form onSubmit={(e) => create(e, project)}>
-                      <DialogHeader className="pb-4">
+                      <DialogHeader className="pb-6 !text-center">
                         <DialogTitle>Add to projects</DialogTitle>
                         <DialogDescription className="font-light">
                           Add this project to your projects list, the video,
@@ -157,6 +194,22 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
                                 name={input.name}
                               />
                             </div>
+                          ) : input.type == "select" ? (
+                            <Select onValueChange={setType}>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Project Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {input.options &&
+                                  input?.options.map((op, i: number) => {
+                                    return (
+                                      <SelectItem value={op.value} key={i}>
+                                        {op.name}
+                                      </SelectItem>
+                                    );
+                                  })}
+                              </SelectContent>
+                            </Select>
                           ) : (
                             <div className="grid gap-2" key={i}>
                               <Label htmlFor={input.id} className="text-right">

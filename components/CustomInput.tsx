@@ -42,7 +42,7 @@ export const CustomInput = ({
       <label
         htmlFor={id}
         className={clsx("text-xl mb-1 capitalize", {
-          "text-red-400": error,
+          // "text-red-400": error,
         })}
       >
         {label}

@@ -4,7 +4,6 @@ import styles from "../styles/Services.module.scss";
 import { twMerge } from "tailwind-merge";
 import { Button } from "@/components/Button";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 
 type props = {
@@ -20,7 +19,6 @@ export const Service = ({ icon, title, desc }: props) => {
   const iconEl = useRef(null);
 
   useEffect(() => {
-    // ScrollTrigger.refresh();
     if (
       !titleEl.current ||
       !descEl.current ||

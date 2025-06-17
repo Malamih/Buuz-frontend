@@ -47,7 +47,7 @@ export const ValueEl = () => {
                   className={clsx(
                     "border-b-4 relative select-none z-[1] border-transparent py-6 px-12 font-light cursor-pointer hover:bg-gray-200 transition-all duration-200 text-gray-500 text-xl capitalize",
                     {
-                      "border-b-black": value.active,
+                      "border-b-darkPrimary": value.active,
                     }
                   )}
                 >

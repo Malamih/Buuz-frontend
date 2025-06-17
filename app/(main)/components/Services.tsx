@@ -1,12 +1,10 @@
 "use client";
-import { Service } from "./Service";
-import VideoClipIcon from "@/assets/icons/video-clip.svg";
-import TvIcon from "@/assets/icons/tv.svg";
-import PencilIcon from "@/assets/icons/pencil.svg";
-import LaudIcon from "@/assets/icons/loud.svg";
+import * as icons from "lucide-react";
 import { twMerge } from "tailwind-merge";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { useMainStore } from "@/stores/main";
+import { Service } from "./Service";
 
 export const Services = ({
   classes,
@@ -15,6 +13,9 @@ export const Services = ({
   classes?: string;
   title?: boolean;
 }) => {
+  const { pageContent } = useMainStore((state) => state);
+
+  const [services, setServices] = useState([]);
   const titleEl = useRef<HTMLHeadingElement>(null);
   const desc = useRef<HTMLParagraphElement>(null);
   const container = useRef<HTMLDivElement>(null);
@@ -46,6 +47,12 @@ export const Services = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (pageContent?.home) {
+      setServices(pageContent?.home?.services);
+    }
+  }, [pageContent]);
+
   return (
     <section className={twMerge("services py-16", classes)} ref={container}>
       <div className="container">
@@ -64,8 +71,7 @@ export const Services = ({
               className="w-full max-w-[700px] m-auto translate-y-16 opacity-0"
               ref={desc}
             >
-              At Beez Production, we offer a full range of services designed to
-              amplify your brand’s presence
+              {pageContent?.home?.our_services}
             </p>
           </div>
         ) : null}
@@ -75,26 +81,26 @@ export const Services = ({
             classes
           )}
         >
-          <Service
-            icon={<VideoClipIcon />}
-            title="Video Production"
-            desc="From concept creation to final edits, we deliver cinematic visuals that tell your brand’s story powerfully and effectively"
-          />
-          <Service
-            icon={<TvIcon />}
-            title="TV Commercials"
-            desc="We specialize in creating commercials that grab attention and leave a powerful impression. Whether it’s humorous, dramatic, or action-packed, we deliver it with precision"
-          />
-          <Service
-            icon={<PencilIcon />}
-            title="Creative Concepts"
-            desc="Looking for something unique? Our creative team develops fresh, out-of-the-box ideas that resonate with your audience and leave them wanting more"
-          />
-          <Service
-            icon={<LaudIcon />}
-            title="Marketing Campaigns"
-            desc="From branding videos to promotional reels, we craft campaigns that effectively showcase your products and services to the right audience"
-          />
+          {services?.map(
+            (
+              service: { title: string; description: string; icon: string },
+              i: number
+            ) => {
+              return (() => {
+                const Icon = icons[
+                  service.icon as keyof typeof icons
+                ] as React.FC<icons.LucideProps>;
+                return (
+                  <Service
+                    key={i}
+                    icon={<Icon className="scale-[3.3] opacity-50" />}
+                    title={service.title}
+                    desc={service.description}
+                  />
+                );
+              })();
+            }
+          )}
         </div>
       </div>
     </section>

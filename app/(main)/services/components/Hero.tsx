@@ -2,6 +2,7 @@
 import { Button } from "@/components/Button";
 import gsap from "gsap";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 export const Hero = () => {
@@ -56,11 +57,13 @@ export const Hero = () => {
             amplify your brand’s presences
           </p>
           <div className="button -translate-x-[100px] opacity-0" ref={button}>
-            <Button
-              content="Contact us"
-              classes="border-[#69696970] min-h-[55px] border-1 pl-6 rounded-xl"
-              iconClasses="bg-[#2b2b2b] h-full rounded-lg"
-            />
+            <Link href={"/services"}>
+              <Button
+                content="Contact us"
+                classes="border-[#69696970] min-h-[55px] border-1 pl-6 rounded-xl"
+                iconClasses="bg-[#2b2b2b] h-full rounded-lg"
+              />
+            </Link>
           </div>
         </div>
         <div className="image hidden md:inline-block relative z-0 flex-1">

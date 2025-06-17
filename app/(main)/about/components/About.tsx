@@ -5,10 +5,13 @@ import { twMerge } from "tailwind-merge";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useMainStore } from "@/stores/main";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const AboutSection = () => {
+  const { pageContent } = useMainStore((state) => state);
+
   const firstCard = useRef<HTMLDivElement>(null);
   const secondCard = useRef<HTMLDivElement>(null);
   const thirdCard = useRef<HTMLDivElement>(null);
@@ -126,13 +129,10 @@ export const AboutSection = () => {
               Who We Are
             </h2>
             <h1 className="font-bold text-4xl sm:text-5xl mb-12">
-              Beez Production is an Iraqi video production
+              {pageContent?.about?.who_we_are}
             </h1>
             <p className="font-light text-lg sm:text-xl text-justify">
-              dedicated to redefining creativity and storytelling in the world
-              of advertising. Specializing in high-quality TV commercials and
-              imaginative creative concepts, we transform ordinary ideas into
-              extraordinary visuals that leave lasting impressions.
+              {pageContent?.about?.about_us}
             </p>
           </div>
         </div>

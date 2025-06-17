@@ -24,7 +24,7 @@ export interface ProjectResponse {
 export const useFetchVideos = (
   id: string,
   fetchingType: "single" | "multiple",
-  params: {}
+  params?: {}
 ) => {
   let url =
     fetchingType == "multiple" ? `/users/${id}/videos` : `/videos/${id}`;

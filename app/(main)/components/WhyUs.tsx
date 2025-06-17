@@ -1,50 +1,32 @@
 "use client";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import _ScrollTrigger, { ScrollTrigger } from "gsap/ScrollTrigger";
 import ReasonIcon from "@/assets/icons/reason.svg";
+import { useMainStore } from "@/stores/main";
 gsap.registerPlugin(ScrollTrigger);
 
+interface Feature {
+  title: string;
+  description: string;
+}
+
 export const WhyUs = ({ classes }: { classes?: string }) => {
-  const reasons = [
-    {
-      title: "Innovative Storytelling",
-      desc: "We create content that captures hearts and mindvs",
-      order: "01",
-      active: false,
-    },
-    {
-      title: "Creative Expertise",
-      desc: "Fresh ideas tailored to your brand's needs",
-      order: "02",
-      active: false,
-    },
-    {
-      title: "Tailored Solutions",
-      desc: "Customized strategies to achieve your goals",
-      order: "03",
-      active: false,
-    },
-    {
-      title: "Professional Quality",
-      desc: "High-end visuals with meticulous attention to detail",
-      order: "04",
-      active: false,
-    },
-    {
-      title: "Collaborative Process",
-      desc: "We listen, we create, and we deliver",
-      order: "05",
-      active: false,
-    },
-  ];
+  const { pageContent } = useMainStore((state) => state);
+  const [reasons, setReasons] = useState<Feature[]>([]);
 
   const imageRef = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const reasonsWrapper = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (pageContent?.home) {
+      setReasons(pageContent?.home?.features);
+    }
+  }, [pageContent]);
 
   useEffect(() => {
     ScrollTrigger.config({
@@ -69,86 +51,106 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
     };
   }, []);
 
+  // Pin image animation (only runs once when container is ready)
   useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container.current,
-        scrub: true,
-      },
+    if (!imageRef.current || !container.current) return;
+
+    ScrollTrigger.create({
+      trigger: container.current,
+      start: "top 120px",
+      end: "bottom bottom",
+      pin: imageRef.current,
+      pinSpacing: false,
+      anticipatePin: 1,
+      fastScrollEnd: true,
+      invalidateOnRefresh: true,
     });
-    if (imageRef.current) {
-      tl.to(imageRef.current, {
-        scrollTrigger: {
-          pin: true,
-          trigger: imageRef.current,
-          scrub: 0.7,
-          anticipatePin: 1,
-          start: "top 120px",
-          fastScrollEnd: true,
-          invalidateOnRefresh: true,
-          end: "+=800",
-        },
-      });
-    }
-    const reasons = reasonsWrapper.current?.querySelectorAll(".reason");
-    if (reasons) {
-      reasons.forEach((r) => {
-        gsap.to(r, {
-          opacity: 1,
-          y: 0,
-          x: 0,
-          scrollTrigger: {
-            trigger: r,
-            scrub: 0.3,
-            start: "top 100%",
-            end: "top 50%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      });
-    }
   }, [container]);
 
+  // Reasons animation (runs when reasons change)
+  useGSAP(() => {
+    if (!reasonsWrapper.current || reasons.length === 0) return;
+
+    // Clear existing reason animations first
+    const existingTriggers = ScrollTrigger.getAll().filter(
+      (trigger) =>
+        trigger.vars.trigger &&
+        (trigger.vars.trigger instanceof Element && trigger.vars.trigger.classList.contains("reason"))
+    );
+    existingTriggers.forEach((trigger) => trigger.kill());
+
+    // Simple fade in animation for reasons
+    const reasonElements = reasonsWrapper.current.querySelectorAll(".reason");
+    reasonElements.forEach((reason) => {
+      gsap.to(reason, {
+        opacity: 1,
+        y: 0,
+        x: 0,
+        scrollTrigger: {
+          trigger: reason,
+          scrub: 0.3,
+          start: "top 100%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    });
+
+    // Refresh ScrollTrigger after adding new animations
+    ScrollTrigger.refresh();
+  }, [reasons]);
+
   return (
-    <section
-      className={twMerge("overflow-hidden pt-40", classes)}
-      ref={container}
-    >
+    <section className={twMerge("overflow-hidden relative", classes)}>
       <div className="container">
         <div className="title text-center font-extralight mb-28">
           <h1 className="mb-3 text-4xl">
             Why Choose <b>Beez Production?</b>
           </h1>
           <p className="w-full md:w-[800px] m-auto">
-            Choosing the right partner for your production needs can make all
-            the difference. Here's why Beez Production is your best choice
+            {pageContent?.home?.why_choose_beez_production}
           </p>
         </div>
-        <div className="content flex justify-between gap-12">
-          <div className="reasons pt-24 pb-24" ref={reasonsWrapper}>
+        <div
+          className="content flex justify-between gap-12 relative"
+          ref={container}
+        >
+          <div
+            className="reasons flex-1 pt-24 pb-24 relative z-10"
+            ref={reasonsWrapper}
+          >
             {reasons.map((reason, i: number) => {
               return (
                 <div
-                  className="reason flex relative gap-5 min-h-[300px] opacity-0 translate-y-[200px]"
+                  className="reason flex relative gap-5 min-h-[300px] mb-8 opacity-0 translate-y-[200px]"
                   key={i}
                 >
-                  <div className="icon hidden md:inline-block">
+                  <div className="icon hidden md:inline-block flex-shrink-0">
                     <ReasonIcon />
                   </div>
-                  <div className="title-desc relative">
+                  <div className="title-desc relative flex-1">
                     <div className="reason-number font-extralight absolute top-[-60%] left-0 w-full h-full text-[220px] opacity-10 pointer-events-none">
                       <span className="relative z-[1]">{"0" + (i + 1)}</span>
                     </div>
-                    <h1 className="mb-4 text-4xl font-bold">{reason.title}</h1>
-                    <p className="text-lg font-light">{reason.desc}</p>
+                    <h1 className="mb-4 text-4xl font-bold relative z-[2]">
+                      {reason.title}
+                    </h1>
+                    <p className="text-lg font-light relative z-[2]">
+                      {reason.description}
+                    </p>
                   </div>
                 </div>
               );
             })}
           </div>
           <div
-            className="image w-[50%] hidden lg:inline-block rounded-bl-[100px] overflow-hidden h-[calc(100%-110px)] shadow-lg"
-            style={{ willChange: "transform", backfaceVisibility: "hidden" }}
+            className="image w-[45%] hidden lg:block rounded-bl-[100px] overflow-hidden shadow-lg relative"
+            style={{
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+              height: "calc(100vh - 240px)",
+              position: "relative",
+            }}
             ref={imageRef}
           >
             <Image

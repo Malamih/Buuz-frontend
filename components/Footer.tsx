@@ -7,12 +7,12 @@ import Image from "next/image";
 
 export const Footer = () => {
   return (
-    <footer className="bg-primary text-onPrimary pt-28 pb-4">
-      <div className="container flex flex-col md:flex-row gap-12 justify-between">
+    <footer className="bg-primary text-onPrimary pt-14 pb-4 z-10 relative">
+      <div className="container flex flex-col md:flex-row gap-6 justify-between">
         <div className="contactInfo">
           <div className="title">
-            <h1 className="flex items-center gap-6 text-4xl font-bold mb-8 md:text-6xl md:gap-10">
-              <span>Let’s</span> <Logo className="scale-100 md:scale-125" />
+            <h1 className="flex items-center font-bold mb-6 text-6xl gap-4">
+              <span>Let’s</span> <Logo className="w-[160px]" />
             </h1>
             <p className="text-xl md:text-2xl font-extralight w-full md:w-[90%] italic">
               Ready to create the buzz your brand needs? Let's talk!
@@ -33,7 +33,7 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-        <ul className="links flex-1">
+        <ul className="links flex-1 w-full min-w-fit">
           <h1 className="font-[900] mb-6 text-2xl">
             <Link href={"/"}>Home</Link>
           </h1>
@@ -52,7 +52,7 @@ export const Footer = () => {
             </li>
           </div>
         </ul>
-        <div className="watermark w-[330px] -translate-y-12 hidden md:inline-block">
+        <div className="watermark w-[300px] -translate-y-12 hidden md:inline-block">
           <Image
             src={"/watermark.png"}
             width={1000}
@@ -63,7 +63,17 @@ export const Footer = () => {
       </div>
       <div className="copyright mt-16">
         <p className="font-light text-lg text-center">
-          Copyright 2024. <b>Malamih.net</b> All rights reserved
+          Copyright 2024.{" "}
+          <b>
+            <Link
+              href={"https://www.instagram.com/malamihnet/"}
+              target="_blank"
+              className="hover:underline"
+            >
+              Malamih.net
+            </Link>
+          </b>{" "}
+          All rights reserved
         </p>
       </div>
     </footer>

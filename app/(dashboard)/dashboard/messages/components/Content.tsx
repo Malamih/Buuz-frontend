@@ -34,33 +34,51 @@ export const Content = () => {
   }, [emailInputValue]);
   const services = [
     {
-      value: "video-production",
-      label: "Video Production",
-      color: "rgba(215, 38, 61, 0.3)",
-      borderColor: "#A61B2D",
+      value: "commercial",
+      label: "Commercial",
+      color: "rgba(255, 193, 7, 0.3)", // Golden yellow - premium, commercial appeal
+      borderColor: "#F57C00",
     },
     {
-      value: "tvc-commercial",
-      label: "TVC Commercial",
-      color: "rgba(63, 114, 175, 0.3)",
-      borderColor: "#2B4D77",
+      value: "films",
+      label: "Films",
+      color: "rgba(220, 53, 69, 0.3)", // Cinema red - classic movie theater
+      borderColor: "#C21807",
     },
     {
-      value: "creative-concepts",
-      label: "Creative Concepts",
-      color: "rgba(244, 162, 97, 0.3)",
-      borderColor: "#E07A3F",
+      value: "short-films",
+      label: "Short Films",
+      color: "rgba(111, 66, 193, 0.3)", // Purple - artistic, creative
+      borderColor: "#6F42C1",
     },
     {
-      value: "marketing-campaigns",
-      label: "Marketing Campaigns",
-      color: "rgba(42, 157, 143, 0.3)",
-      borderColor: "#1F766B",
+      value: "series",
+      label: "Series",
+      color: "rgba(25, 135, 84, 0.3)", // Green - continuous, ongoing
+      borderColor: "#146C43",
+    },
+    {
+      value: "tv-programs",
+      label: "TV Programs",
+      color: "rgba(13, 110, 253, 0.3)", // Blue - broadcast, traditional TV
+      borderColor: "#0A58CA",
+    },
+    {
+      value: "video-clip",
+      label: "Video Clip",
+      color: "rgba(214, 51, 132, 0.3)", // Pink/magenta - modern, social media
+      borderColor: "#B02A5B",
+    },
+    {
+      value: "sketch",
+      label: "Sketch",
+      color: "rgba(253, 126, 20, 0.3)", // Orange - playful, comedy
+      borderColor: "#D63384",
     },
     {
       value: "all",
       label: "All",
-      color: "rgba(108, 117, 125, 0.3)",
+      color: "rgba(108, 117, 125, 0.3)", // Neutral gray - comprehensive
       borderColor: "#495057",
     },
   ];
@@ -115,7 +133,7 @@ export const Content = () => {
       </header>
       {data?.payload?.length == 0 && (
         <span className="text-center text-xl text-gray-400 w-full inline-block py-8">
-          No Clients
+          No Messages
         </span>
       )}
       <div className="clients mt-4 flex flex-wrap gap-4">

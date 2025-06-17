@@ -5,7 +5,14 @@ import styles from "../styles/sidebar.module.scss";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
-import { BadgeCheck, ClipboardEdit, File, FileText, Users } from "lucide-react";
+import {
+  BadgeCheck,
+  ClipboardEdit,
+  File,
+  FileText,
+  MessageCircle,
+  Users,
+} from "lucide-react";
 
 export const Sidebar = () => {
   const pathname = usePathname();
@@ -21,9 +28,9 @@ export const Sidebar = () => {
       icon: <BadgeCheck width={18} />,
     },
     {
-      name: "Clients",
-      path: "/dashboard/clients",
-      icon: <Users width={18} />,
+      name: "Messages",
+      path: "/dashboard/messages",
+      icon: <MessageCircle width={18} />,
     },
   ];
   const pagesLinks = [
@@ -32,11 +39,11 @@ export const Sidebar = () => {
       path: "/dashboard/content/home",
       icon: <File width={18} />,
     },
-    // {
-    //   name: "About",
-    //   path: "/dashboard/content/about",
-    //   icon: <File width={18} />,
-    // },
+    {
+      name: "About",
+      path: "/dashboard/content/about",
+      icon: <File width={18} />,
+    },
   ];
   return (
     <aside

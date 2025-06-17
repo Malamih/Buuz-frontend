@@ -103,7 +103,7 @@ export const About = () => {
                 className="text-justify -translate-x-24 opacity-0"
                 ref={textBlock1}
               >
-                {pageContent?.home?.who_are_we}
+                {pageContent?.home?.who_we_are}
               </p>
             </div>
           </div>

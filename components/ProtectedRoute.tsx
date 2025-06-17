@@ -14,21 +14,28 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   });
   useEffect(() => {
     if (error) {
+      Cookies.remove("token");
       router.push("/auth");
       toast.error(error.message);
     }
+    return () => {};
   }, [error]);
+
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log(token);
     if (!token && pathname.includes("/dashboard")) {
+      Cookies.remove("token");
       router.push("/auth");
-      setMounted(true);
+      setTimeout(() => {
+        setMounted(true);
+      }, 400);
     } else {
-      setMounted(true);
+      setTimeout(() => {
+        setMounted(true);
+      }, 400);
     }
-  });
+  }, []);
 
-  if (!mounted) return <>Loading...</>;
+  if (!mounted || isPending) return <>Loading...</>;
   return <>{children}</>;
 };

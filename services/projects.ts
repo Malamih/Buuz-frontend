@@ -13,7 +13,7 @@ interface DeleteResponse {
 export const useGetProjects = (params?: any) => {
   const endpont = new ApiClient<any, ProjectsResponse>(`/projects`);
   return useQuery({
-    queryKey: ["projects"],
+    queryKey: ["projects", params],
     queryFn: endpont.get,
     meta: { params: { ...params } },
     refetchOnMount: false,

@@ -37,7 +37,7 @@ export const Hero = () => {
       </div>
       <div className="container relative text-center z-[1] text-white">
         <h1
-          className="text-7xl mb-4 [&_span]:translate-y-[50px] [&_span]:inline-block [&_span]:opacity-0"
+          className="text-4xl md:text-7xl mb-4 [&_span]:translate-y-[50px] [&_span]:inline-block [&_span]:opacity-0"
           ref={title}
         >
           <span>Contact</span> <span>us</span>

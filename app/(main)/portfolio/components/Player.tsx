@@ -2,7 +2,12 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Player from "@vimeo/player";
-import { PauseIcon, PlayIcon } from "lucide-react";
+import {
+  FullscreenIcon,
+  LucideFullscreen,
+  PauseIcon,
+  PlayIcon,
+} from "lucide-react";
 import { formatShortDateTime, timeAgo } from "@/lib/date";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -13,6 +18,7 @@ import gsap from "gsap";
 import { VideoPlayerSkeleton } from "./VideoPlayerSkeleton";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 const getProject = async (id: string) => {
   try {
@@ -28,7 +34,9 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
   const content = useRef<HTMLDivElement>(null);
   const playIcon = useRef<HTMLDivElement>(null);
   const player = useRef<Player>(null);
+  const fullscreenButton = useRef<HTMLButtonElement>(null);
 
+  const [fullscreen, setFullscreen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canAction, setCanAction] = useState(false);
@@ -53,12 +61,16 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
       url: data?.project?.video,
       keyboard: true,
       playsinline: true,
-      height: vh * 70,
-      controls: false,
+      height: vh * 60,
+      controls: fullscreen,
     });
-    player.current.on("loaded", () => {
+
+    player.current.on("loaded", async () => {
       setIsLoaded(true);
       setCanAction(true);
+      if (fullscreen) {
+        await player.current?.requestFullscreen();
+      }
     });
     player.current.on("bufferend", () => {
       setCanAction(true);
@@ -66,20 +78,30 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
     player.current.on("bufferstart", () => {
       setCanAction(false);
     });
+
+    player.current.on("fullscreenchange", (e) => {
+      setFullscreen(e.fullscreen);
+    });
     return () => {
       if (!player.current) return;
       player.current.destroy().catch(console.error);
       player.current = null;
       setIsLoaded(false);
     };
-  }, [id, data]); // Add id to dependencies
+  }, [id, data, fullscreen]); // Add id to dependencies
+
   const hover = () => {
     if (!playIcon.current || !content.current) return;
     gsap.to(playIcon.current, {
       opacity: 1,
+      duration: 0,
     });
     gsap.to(content.current, {
       opacity: 1,
+    });
+    gsap.to(fullscreenButton.current, {
+      opacity: 1,
+      duration: 0,
     });
   };
 
@@ -92,6 +114,10 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
     gsap.to(content.current, {
       opacity: 0,
       duration: 0.1,
+    });
+    gsap.to(fullscreenButton.current, {
+      opacity: 0,
+      duration: 0,
     });
   };
 
@@ -108,27 +134,43 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
     });
   };
 
+  const handleFullscreen = async () => {
+    setFullscreen(true);
+  };
+
   return (
     <section className="player min-h-[calc(100vh-90px)]">
       <div className="container px-0">
         <div className="default w-[99%] m-auto">
-          <div className="video bg-gray-900 relative flex justify-center rounded-tl-[100px] rounded-br-[100px] overflow-hidden w-full">
+          <div className="video relative flex justify-center rounded-tl-[100px] rounded-br-[100px] overflow-hidden w-full">
             <div
-              className="video w-full h-[70vh]"
+              className="video w-full h-[60vh]"
               onMouseLeave={hideElements}
               onMouseEnter={hover}
             >
               {!isLoaded && <VideoPlayerSkeleton />}
               <div
                 className={twMerge(
-                  "video-player relative z-0 flex items-center justify-center",
+                  "video-player relative w-fit h-fit m-auto rounded-br-[100px] rounded-tl-[100px] overflow-hidden z-0 flex items-center justify-center",
                   styles.player
                 )}
                 ref={playerRef}
-              ></div>
+              >
+                {isLoaded && (
+                  <button
+                    className={clsx(
+                      "fullscreen absolute top-4 right-4 z-10 hover:text-primary text-white w-[60px] h-[60px] rounded-full flex items-center justify-center hover:bg-[#ffffff30] transition duration-150 cursor-pointer"
+                    )}
+                    onClick={handleFullscreen}
+                    ref={fullscreenButton}
+                  >
+                    <LucideFullscreen width={40} height={40} />
+                  </button>
+                )}
+              </div>
               <div
                 className={clsx(
-                  "playIcon cursor-pointer absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4",
+                  "playIcon cursor-pointer hover:text-primary transition duration-100 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4",
                   styles.playIcon,
                   {
                     "!opacity-0": !isLoaded,
@@ -174,27 +216,32 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
               </div>
             </div>
           </div>
-          <div className="title px-4 sm:p-0 text-2xl sm:text-4xl my-6 font-bold">
+          <div className="title px-4 sm:p-0 text-2xl sm:text-4xl my-8 font-bold">
             {isLoaded ? (
               <h1>{data?.project?.title}</h1>
             ) : (
               <Skeleton className="w-[200px] h-[30px] bg-gray-700" />
             )}
           </div>
-          <div className="profile px-4 sm:p-0 flex gap-4">
-            <Image
-              src={"/portfolio/profile.png"}
-              width={60}
-              height={60}
-              alt="profile"
-            />
-            <div className="content">
-              <h1 className="text-xl md:text-2xl font-bold">Beez Production</h1>
-              <p className="date text-sm md:text-lg font-light capitalize">
-                {timeAgo(data?.project?.created_time)}
-              </p>
+          <Link href={"https://vimeo.com/user230152930"} target="_blank">
+            <div className="profile px-4 sm:p-0 flex gap-4 hover:text-white text-gray-200">
+              <Image
+                src={"/portfolio/profile.png"}
+                width={60}
+                height={60}
+                alt="profile"
+                className="min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]"
+              />
+              <div className="content">
+                <h1 className="text-xl md:text-2xl font-bold mb-2">
+                  Beez Production
+                </h1>
+                <p className="date text-xs md:text-lg font-light capitalize">
+                  {timeAgo(data?.project?.created_time)}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </section>

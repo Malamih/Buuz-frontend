@@ -2,11 +2,23 @@
 import Image from "next/image";
 import styles from "../styles/visionAndValues.module.scss";
 import { twMerge } from "tailwind-merge";
-import { useEffect, useRef } from "react";
+import { Ref, Reference, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import gsap from "gsap";
+import { useMainStore } from "@/stores/main";
+
+interface Card {
+  title: string;
+  areaId: string;
+  ref: Ref<HTMLDivElement> | undefined;
+  desc: string;
+  list: { title: string; description: string }[];
+}
 
 export const VisionAndValue = () => {
+  const { pageContent } = useMainStore((state) => state);
+  const [cards, setCards] = useState<Card[]>([]);
+
   const mainCard = useRef<HTMLDivElement>(null);
   const firstCard = useRef<HTMLDivElement>(null);
   const secondCard = useRef<HTMLDivElement>(null);
@@ -50,58 +62,43 @@ export const VisionAndValue = () => {
         end: "top center",
       },
     });
-  }, []);
-  const cards = [
-    {
-      title: "The Buzz That You Need",
-      desc: "",
-      list: [],
-      areaId: "main",
-      ref: mainCard,
-    },
-    {
-      title: "Our Mission",
-      desc: "To elevate Iraqi TV commercials to new levels of creativity and directing. We believe every brand has a story to tell, and our job is to make sure your audience not only hears it but feels it",
-      areaId: "mission",
-      list: [],
-      ref: firstCard,
-    },
-    {
-      title: "Our Vision",
-      desc: "We aim to be the most innovative and influential video production company in Iraq, known for our cutting-edge creativity and high-quality content. Our goal is to create commercials that go beyond promotion and become memorable experiences",
-      areaId: "vision",
-      list: [],
-      ref: secondCard,
-    },
-    {
-      title: "Our Values",
-      desc: "",
-      ref: thirdCard,
-      list: [
-        {
-          title: "Creativity",
-          desc: "We push boundaries to craft original ideas that make your brand stand out.",
-        },
-        {
-          title: "Quality",
-          desc: " Excellence in every detail, from scripting to post-production.",
-        },
-        {
-          title: "Collaboration",
-          desc: "Your vision matters, and we make it our priority.",
-        },
-        {
-          title: "Innovation",
-          desc: "Continuously evolving to stay ahead of industry trends.",
-        },
-        {
-          title: "Integrity",
-          desc: "Building lasting relationships based on trust and transparency.",
-        },
-      ],
-      areaId: "values",
-    },
-  ];
+  }, [cards]);
+
+  useEffect(() => {
+    if (!pageContent?.about) return;
+    const newCards = [
+      {
+        title: "The Buzz That You Need",
+        desc: "",
+        list: [],
+        areaId: "main",
+        ref: mainCard,
+      },
+      {
+        title: "Our Mission",
+        desc: pageContent?.about?.our_mission,
+        areaId: "mission",
+        list: [],
+        ref: firstCard,
+      },
+      {
+        title: "Our Vision",
+        desc: pageContent?.about?.our_vision,
+        areaId: "vision",
+        list: [],
+        ref: secondCard,
+      },
+      {
+        title: "Our Values",
+        desc: "",
+        ref: thirdCard,
+        list: pageContent?.about?.our_values,
+        areaId: "values",
+      },
+    ];
+    setCards(newCards);
+  }, [pageContent]);
+
   const cardsEl = cards.map((card, i: number) => {
     return (
       <div
@@ -127,7 +124,7 @@ export const VisionAndValue = () => {
               {card.list.map((item, i: number) => {
                 return (
                   <li key={i} className="font-light">
-                    <b>{item.title}:</b> {item.desc}
+                    <b>{item.title}:</b> {item.description}
                   </li>
                 );
               })}

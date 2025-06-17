@@ -4,25 +4,104 @@ import { PauseIcon, PlayIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ProjectSkeleton } from "./ProjectSkeleton";
 import clsx from "clsx";
+import { NotFound } from "./Projects-404";
 
 export const Projects = () => {
   const { id } = useParams();
-  const { data, isFetching, error, refetch } = useGetProjects();
+
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([
+    {
+      name: "All",
+      value: "",
+      active: true,
+    },
+    {
+      name: "Commercial",
+      value: "commercial",
+      active: false,
+    },
+    {
+      name: "Films",
+      value: "films",
+      active: false,
+    },
+    {
+      name: "Short Films",
+      value: "short-films",
+      active: false,
+    },
+    {
+      name: "TV Programs",
+      value: "tv-programs",
+      active: false,
+    },
+    {
+      name: "Series",
+      value: "series",
+      active: false,
+    },
+    {
+      name: "Video Clip",
+      value: "video-clip",
+      active: false,
+    },
+    {
+      name: "Sketch",
+      value: "sketch",
+      active: false,
+    },
+  ]);
+
+  const { data, isFetching, error, refetch } = useGetProjects({
+    type: category,
+  });
+
   useEffect(() => {
     if (!data?.payload && !error) {
       refetch();
     }
   }, [data]);
+
+  const handleActive = (i: number) => {
+    const cats = [...categories];
+    cats.forEach((cat) => {
+      cat.active = false;
+    });
+    cats[i].active = true;
+    setCategories(cats);
+    setCategory(cats[i].value);
+  };
+
   return (
-    <section className="projects">
-      <div className="container gap-8 grid grid-cols-[repeat(auto-fill,minmax(100%,1fr))] md:grid-cols-[repeat(auto-fill,minmax(350px,1fr))]">
+    <section className="projects pb-24">
+      <div className="categories justify-center flex items-center gap-2 flex-wrap container px-0 py-2">
+        {categories.map((category, i: number) => {
+          return (
+            <button
+              className={clsx(
+                "category text-sm cursor-pointer py-2 px-4 bg-[#2b2b2bad] border border-[#2b2b2b] rounded-sm hover:text-primary transition duration-200",
+                {
+                  "bg-[#303030] text-primary": category.active,
+                }
+              )}
+              key={i}
+              onClick={() => handleActive(i)}
+            >
+              {category.name}
+            </button>
+          );
+        })}
+      </div>
+      <div className="container px-0 gap-8 grid grid-cols-[repeat(auto-fill,minmax(100%,1fr))] md:grid-cols-[repeat(auto-fill,minmax(400px,1fr))]">
         {isFetching &&
           Array.from({ length: 12 }).map((_, i: number) => {
             return <ProjectSkeleton key={i} />;
           })}
+
         {!isFetching &&
           data?.payload?.map((project, i: number) => {
             return (
@@ -57,6 +136,11 @@ export const Projects = () => {
             );
           })}
       </div>
+      {data?.payload && data?.payload?.length < 1 && (
+        <div className="flex items-center justify-center w-full">
+          <NotFound />
+        </div>
+      )}
     </section>
   );
 };

@@ -32,27 +32,45 @@ export const ContactForm = () => {
   }, []);
   const [servicesCheckBoxes, setServicesCheckBoxes] = useState([
     {
-      title: "Video Production",
+      title: "Commercial",
       active: false,
-      value: "video-production",
+      value: "COMMERCIAL",
       name: "service",
     },
     {
-      title: "Creative Concepts",
+      title: "Films",
       active: false,
-      value: "creative-concepts",
+      value: "films",
       name: "service",
     },
     {
-      title: "Tvc Commercial",
+      title: "Short films",
       active: false,
-      value: "tvc-commercial",
+      value: "short-films",
       name: "service",
     },
     {
-      title: "Marketing Campaigns",
+      title: "Series",
       active: false,
-      value: "marketing-campaigns",
+      value: "series",
+      name: "service",
+    },
+    {
+      title: "TV Programs",
+      active: false,
+      value: "tv-programs",
+      name: "service",
+    },
+    {
+      title: "Video clip",
+      active: false,
+      value: "video-clip",
+      name: "service",
+    },
+    {
+      title: "Sketch",
+      active: false,
+      value: "sketch",
       name: "service",
     },
   ]);
@@ -94,11 +112,11 @@ export const ContactForm = () => {
     }
   }, [error]);
   return (
-    <section className="contactForm w-full text-onBackground bg-[#262626] lg:bg-[linear-gradient(to_right,_#262626_50%,_white_50%)]">
-      <div className="container flex gap-4 flex-col lg:flex-row p-0">
-        <div className="logo z-0 absolute top-[100%] md:top-[90%] left-0 w-[330px]">
-          <Image src={"/darkLogo.svg"} alt="logo" width={330} height={400} />
-        </div>
+    <section className="contactForm relative w-full text-onBackground bg-[#262626] lg:bg-[linear-gradient(to_right,_#262626_50%,_white_50%)]">
+      <div className="logo z-0 absolute bottom-[-40px] left-0 w-[330px]">
+        <Image src={"/darkLogo.svg"} alt="logo" width={330} height={400} />
+      </div>
+      <div className="container relative flex gap-4 flex-col lg:flex-row p-0">
         <div className="title lg:w-full min-w-[400px] p-2 pt-[100px] z-[1] relative">
           <h1
             className="font-bold mb-4 text-4xl md:text-6xl italic -translate-x-[100px] opacity-0"
@@ -163,7 +181,7 @@ export const ContactForm = () => {
                       className={clsx(
                         "input relative min-w-[20px] min-h-[20px] border border-[#848484]",
                         {
-                          "border-red-400": error?.fieldErrors?.services,
+                          // "border-red-400": error?.fieldErrors?.services,
                         }
                       )}
                     >
@@ -189,7 +207,7 @@ export const ContactForm = () => {
                     <label
                       htmlFor={service.value}
                       className={clsx("cursor-pointer select-none", {
-                        "text-red-400": error?.fieldErrors,
+                        // "text-red-400": error?.fieldErrors,
                       })}
                     >
                       {service.title}
@@ -199,7 +217,7 @@ export const ContactForm = () => {
               })}
             </div>
           </div>
-          <button className="text-3xl py-4 px-4 bg-[#262626] mt-4 cursor-pointer text-white rounded-xl">
+          <button className="text-3xl py-4 px-4 h-[70px] bg-[#262626] mt-4 cursor-pointer text-white rounded-xl">
             {isPending ? <DotLoader /> : "Get Started"}
           </button>
         </form>

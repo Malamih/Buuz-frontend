@@ -2,6 +2,7 @@
 
 import { useGetPageContent } from "@/services/pages";
 import { useMainStore } from "@/stores/main";
+import { ScrollTrigger } from "gsap/all";
 import { useEffect } from "react";
 
 export const PageContentHandler = () => {
@@ -11,6 +12,7 @@ export const PageContentHandler = () => {
   useEffect(() => {
     if (data) {
       setPageContent(data);
+      ScrollTrigger.refresh();
     }
   }, [data]);
   return <></>;

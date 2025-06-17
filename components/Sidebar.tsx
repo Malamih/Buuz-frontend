@@ -10,6 +10,7 @@ import Logo from "@/assets/logo.svg";
 import EmailIcon from "@/assets/icons/email.svg";
 import PhoneIcon from "@/assets/icons/phone.svg";
 import CursorIcon from "@/assets/icons/cursor.svg";
+import { Button } from "./Button";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -179,7 +180,7 @@ export const Sidebar = () => {
   ];
 
   return (
-    <div className="z-101 relative">
+    <div className="z-101 relative w-[200px]">
       <div className="icon cursor-pointer">
         <button
           className="burgerMenu relative w-[40px] h-[27px] cursor-pointer"
@@ -261,6 +262,13 @@ export const Sidebar = () => {
             </div>
           </div>
         </div>
+        <Link href={"/contact-us"} className="p-4 w-full md:hidden">
+          <Button
+            content="Let's talk"
+            classes="border-[#69696970] bg-[#2b2b2b] w-full flex items-center justify-center text-lg text-white min-h-[55px] border-1 pl-6 rounded-xl"
+            iconClasses="bg-[#69696970] h-full rounded-lg"
+          />
+        </Link>
       </div>
     </div>
   );

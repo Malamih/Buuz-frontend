@@ -12,9 +12,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { extractId } from "@/helpers/vimeo";
 import { useEditProject } from "@/services/projects";
 import { Project, useFetchVideos } from "@/services/vimeo";
+import { SelectValue } from "@radix-ui/react-select";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -27,6 +34,7 @@ export const Edit = ({
   refetch: () => void;
 }) => {
   const [open, setOpen] = useState(false);
+  const [type, setType] = useState("");
   const [videoId, setVideoId] = useState("");
   const success = (msg: string) => {
     toast.success(msg);
@@ -47,7 +55,7 @@ export const Edit = ({
       ...(form.get("title") && { title: form.get("title") }),
       ...(form.get("description") && { description: form.get("description") }),
       ...(form.get("client") && { client: form.get("client") }),
-      ...(form.get("type") && { type: form.get("type") }),
+      ...(type && { type: type }),
       ...(data?.link && { video: data?.link }),
       ...(data?.uri && { video_uri: data?.uri }),
       ...(data?.pictures && { thumbnail: data?.pictures.base_link }),
@@ -70,6 +78,37 @@ export const Edit = ({
   const fetchVideo = () => {
     setVideoId(videoIdValue);
   };
+
+  const categories = [
+    {
+      name: "Commercial",
+      value: "commercial",
+    },
+    {
+      name: "Films",
+      value: "films",
+    },
+    {
+      name: "Short Films",
+      value: "short-films",
+    },
+    {
+      name: "Series",
+      value: "series",
+    },
+    {
+      name: "TV Programs",
+      value: "tv-programs",
+    },
+    {
+      name: "Video Clip",
+      value: "video-clip",
+    },
+    {
+      name: "Sketch",
+      value: "sketch",
+    },
+  ];
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger className="hover:bg-gray-100 cursor-pointer duration-100 transition w-full text-left text-sm p-2">
@@ -126,13 +165,20 @@ export const Edit = ({
                 <Label htmlFor="type" className="text-right">
                   Type
                 </Label>
-                <Input
-                  id="type"
-                  placeholder="Project type..."
-                  className="text-sm font-light"
-                  name="type"
-                  defaultValue={project.type}
-                />
+                <Select onValueChange={setType} defaultValue={project?.type}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Project Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cate, i: number) => {
+                      return (
+                        <SelectItem key={i} value={cate.value}>
+                          {cate.name}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="grid gap-2">

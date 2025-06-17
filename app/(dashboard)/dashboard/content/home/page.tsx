@@ -1,5 +1,6 @@
 import { Content } from "./components/Content";
 import { PortfolioProjects } from "./components/PortoflioProjects";
+import { Services } from "./components/Services";
 import { TextUpdaters } from "./components/TextUpdaters";
 
 export default function page() {
@@ -9,6 +10,7 @@ export default function page() {
         <Content />
         <PortfolioProjects />
         <TextUpdaters />
+        <Services />
       </div>
     </>
   );

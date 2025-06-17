@@ -33,6 +33,7 @@ export const useUpdateHomePageProjects = (
     },
   });
 };
+
 export const useUpdateHomePageContent = (
   scss: (data: { message: string; updated_data: any }) => void
 ) => {
@@ -44,6 +45,25 @@ export const useUpdateHomePageContent = (
       endpoint.put({
         home: {
           ...data.pageContent?.home,
+        },
+      }),
+    onSuccess: (data) => {
+      scss(data);
+    },
+  });
+};
+
+export const useUpdateAboutPageContent = (
+  scss: (data: { message: string; updated_data: any }) => void
+) => {
+  const endpoint = new ApiClient<any, { message: string; updated_data: any }>(
+    "/pages"
+  );
+  return useMutation({
+    mutationFn: (data: { pageContent: any }) =>
+      endpoint.put({
+        about: {
+          ...data.pageContent?.about,
         },
       }),
     onSuccess: (data) => {
