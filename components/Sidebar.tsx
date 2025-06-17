@@ -180,7 +180,7 @@ export const Sidebar = () => {
   ];
 
   return (
-    <div className="z-101 relative w-fit md:w-[200px] ">
+    <div className="z-101 relative w-fit md:w-[200px]">
       <div className="icon cursor-pointer">
         <button
           className="burgerMenu relative w-[40px] h-[27px] cursor-pointer"
