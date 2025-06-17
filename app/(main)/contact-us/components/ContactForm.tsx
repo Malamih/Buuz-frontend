@@ -34,7 +34,7 @@ export const ContactForm = () => {
     {
       title: "Commercial",
       active: false,
-      value: "COMMERCIAL",
+      value: "commercial",
       name: "service",
     },
     {

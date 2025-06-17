@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import _ScrollTrigger, { ScrollTrigger } from "gsap/ScrollTrigger";
 import ReasonIcon from "@/assets/icons/reason.svg";
 import { useMainStore } from "@/stores/main";
+import { useRouter } from "next/navigation";
 gsap.registerPlugin(ScrollTrigger);
 
 interface Feature {
@@ -27,6 +28,17 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
       setReasons(pageContent?.home?.features);
     }
   }, [pageContent]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // تأخير بسيط للسماح للـ DOM بأن يكتمل
+      setTimeout(() => {
+        ScrollTrigger.refresh(true);
+      }, 300);
+    };
+  }, [router]);
 
   useEffect(() => {
     ScrollTrigger.config({
