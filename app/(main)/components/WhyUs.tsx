@@ -29,18 +29,16 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
     }
   }, [pageContent]);
 
-  const router = useRouter();
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      setTimeout(() => {
-        ScrollTrigger.refresh(true);
-      }, 300);
-    };
-    handleRouteChange();
-  }, [router]);
-
-  useEffect(() => {
+    ScrollTrigger.saveStyles(".image");
     ScrollTrigger.config({
       autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize",
     });
@@ -64,10 +62,12 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
   }, []);
 
   // Pin image animation (only runs once when container is ready)
-  useGSAP(() => {
+  useEffect(() => {
     if (!imageRef.current || !container.current) return;
 
-    ScrollTrigger.create({
+    ScrollTrigger.saveStyles(".image");
+
+    const trigger = ScrollTrigger.create({
       trigger: container.current,
       start: "top 120px",
       end: "bottom bottom",
@@ -77,7 +77,11 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
       fastScrollEnd: true,
       invalidateOnRefresh: true,
     });
-  }, [container]);
+
+    return () => {
+      trigger.kill();
+    };
+  }, []);
 
   // Reasons animation (runs when reasons change)
   useGSAP(() => {
