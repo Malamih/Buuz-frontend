@@ -40,13 +40,13 @@ export const ModernIconSelector = ({
   const filteredIcons = useMemo(
     () =>
       iconNames.filter((name) =>
-        name.toLowerCase().includes(search.toLowerCase())
+        name?.toLowerCase()?.includes(search?.toLowerCase())
       ),
     [search]
   );
 
   const visibleIcons = useMemo(
-    () => filteredIcons.slice(0, visibleCount),
+    () => filteredIcons?.slice(0, visibleCount),
     [filteredIcons, visibleCount]
   );
 

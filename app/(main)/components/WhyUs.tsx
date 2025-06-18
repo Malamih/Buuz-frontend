@@ -33,11 +33,11 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
 
   useEffect(() => {
     const handleRouteChange = () => {
-      // تأخير بسيط للسماح للـ DOM بأن يكتمل
       setTimeout(() => {
         ScrollTrigger.refresh(true);
       }, 300);
     };
+    handleRouteChange();
   }, [router]);
 
   useEffect(() => {
