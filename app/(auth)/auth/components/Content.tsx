@@ -31,6 +31,9 @@ export const Content = () => {
   };
 
   useEffect(() => {
+    if (error) {
+      setIsPending(false);
+    }
     if (error && !error.fieldErrors) {
       toast.error(error.message);
     }
