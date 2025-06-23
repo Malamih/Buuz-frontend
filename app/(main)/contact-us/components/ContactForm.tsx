@@ -117,7 +117,7 @@ export const ContactForm = () => {
         <Image src={"/darkLogo.svg"} alt="logo" width={330} height={400} />
       </div>
       <div className="container relative flex gap-4 flex-col lg:flex-row p-0">
-        <div className="title lg:w-full min-w-[400px] p-2 pt-[100px] z-[1] relative">
+        <div className="title lg:w-full md:min-w-[400px] p-2 pt-[100px] z-[1] relative">
           <h1
             className="font-bold mb-4 text-4xl md:text-6xl italic -translate-x-[100px] opacity-0"
             ref={title}

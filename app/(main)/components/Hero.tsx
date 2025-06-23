@@ -45,7 +45,7 @@ export const Hero = () => {
   }, []);
   return (
     <>
-      <div className="hero relative h-[calc(100vh-200px)] md:h-[calc(100vh-90px)] bg-black overflow-hidden">
+      <div className="hero relative h-[calc(86vh-200px)] md:h-[calc(100vh-90px)] bg-black overflow-hidden">
         <div className="bg absolute top-0 left-0 w-full h-full z-[0] pointer-events-none">
           <video
             src={"/bg-video.mp4"}
@@ -72,7 +72,7 @@ export const Hero = () => {
           </div>
           <div className="content relative z-10 h-full flex items-end text-white">
             <h1
-              className="font-extralight text-center text-3xl mb-[] md:text-left md:mb-10 [&_span]:opacity-0 [&_span]:translate-y-12 [&_span]:inline-block overflow-hidden"
+              className="font-extralight text-center text-3xl w-full md:text-left md:mb-10 [&_span]:opacity-0 [&_span]:translate-y-12 [&_span]:inline-block overflow-hidden"
               ref={title}
             >
               <span className="first">Welcome</span>{" "}

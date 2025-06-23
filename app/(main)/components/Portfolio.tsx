@@ -1,9 +1,11 @@
 "use client";
+import { useMainStore } from "@/stores/main";
 import gsap from "gsap";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 export const Portfolio = () => {
+  const { pageContent } = useMainStore((state) => state);
   const container = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const desc = useRef<HTMLParagraphElement>(null);
@@ -67,16 +69,10 @@ export const Portfolio = () => {
           <span className="translate-y-24 inline-block">o</span>
         </h1>
         <p
-          className="font-light text-lg mb-4 translate-y-23 opacity-0"
+          className="font-light text-lg w-[100%] md:w-[80%] mb-4 translate-y-23 opacity-0"
           ref={desc}
         >
-          We’ve had the pleasure of working with a diverse range of clients,
-          producing commercials and campaigns that stand out in the market. Our
-          work has been featured nationwide, earning us a reputation for
-          creativity and excellence.
-          <span className="font-light text-lg block mt-4">
-            Stay tuned for our upcoming projects – we’re just getting started!
-          </span>
+          {pageContent?.home?.portfolio}
         </p>
       </div>
     </div>
