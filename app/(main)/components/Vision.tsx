@@ -18,7 +18,7 @@ export const Vision = () => {
           ></video>
         </div>
         <p className="font-light text-xl text-center md:text-left">
-          {pageContent?.home?.our_vision_and_values}
+          {JSON.stringify(pageContent?.home?.our_vision)}
         </p>
       </div>
     </section>
