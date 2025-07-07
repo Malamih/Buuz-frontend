@@ -26,7 +26,7 @@ export default function MainLayout({
         <Toaster />
         <QueryProvider>
           <PageContentHandler />
-          <ProtectedRoute>{children}</ProtectedRoute>
+          {children}
         </QueryProvider>
       </body>
     </html>

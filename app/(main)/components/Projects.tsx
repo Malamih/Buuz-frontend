@@ -1,7 +1,6 @@
 "use client";
 import ArrowRight from "@/assets/icons/arrow-right.svg";
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
-import { useGetProjects } from "@/services/projects";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Carousel,
@@ -10,9 +9,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import clsx from "clsx";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import styles from "@/app/(main)/styles/Project.module.scss";

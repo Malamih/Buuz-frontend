@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Project } from "@/services/vimeo";
 import { useSortable } from "@dnd-kit/sortable";
-import { GripVerticalIcon, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { CSS } from "@dnd-kit/utilities";
 import { useUpdateHomePageProjects } from "@/services/pages";

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Project, ProjectResponse, useUploadProject } from "@/services/vimeo";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { PlusIcon } from "lucide-react";
 import {
@@ -23,63 +23,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGetPortfoliosByFields } from "@/services/portfolios";
+import { useGetServices } from "@/services/services";
 
 export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
   const [newProjects, setNewProjects] = useState([] as Project[]);
   const [type, setType] = useState("");
-  const inputs = [
-    {
-      name: "description",
-      placeholder: "Project description...",
-      id: "description",
-      label: "Description",
-      type: "textarea",
-    },
-    {
-      name: "client",
-      placeholder: "Project client...",
-      id: "client",
-      label: "Client",
-      type: "input",
-    },
-    {
-      name: "type",
-      placeholder: "Project type...",
-      id: "type",
-      label: "Type",
-      type: "select",
-      options: [
-        {
-          name: "Commercial",
-          value: "commercial",
-        },
-        {
-          name: "Films",
-          value: "films",
-        },
-        {
-          name: "Short Films",
-          value: "short-films",
-        },
-        {
-          name: "Series",
-          value: "series",
-        },
-        {
-          name: "TV Programs",
-          value: "tv-programs",
-        },
-        {
-          name: "Video Clip",
-          value: "video-clip",
-        },
-        {
-          name: "Sketch",
-          value: "sketch",
-        },
-      ],
-    },
-  ];
+  const [client, setClient] = useState("");
 
   const dialogRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
   const setDialogRef =
@@ -114,12 +64,12 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
     e.preventDefault();
     const form = new FormData(e.target);
     const projectData = {
-      client: form.get("client"),
+      client: client,
       description: form.get("description"),
       type: type,
       created_time: videoData.created_time,
       thumbnail: videoData.pictures.base_link,
-      title: videoData.name,
+      title: form.get("title"),
       video: videoData.link,
       video_uri: videoData.uri,
       project_id: videoData.uri.split("/")[2],
@@ -127,9 +77,22 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
     mutate(projectData);
   };
 
-  if (error) {
-    toast.error(error.message);
-  }
+  const {
+    data,
+    isFetching,
+    error: portfoliosError,
+  } = useGetPortfoliosByFields();
+
+  const {
+    data: services,
+    isFetching: isFetchingServices,
+    error: servicesError,
+  } = useGetServices();
+
+  useEffect(() => {
+    if (portfoliosError) toast.error(portfoliosError.message);
+    if (error) toast.error(error.message);
+  }, [portfoliosError, error]);
   return (
     <div {...props}>
       <ul className="flex flex-col gap-2">
@@ -173,63 +136,81 @@ export const ManyVideos = ({ videos, ...props }: { videos: any[] }) => {
                       <DialogHeader className="pb-6 !text-center">
                         <DialogTitle>Add to projects</DialogTitle>
                         <DialogDescription className="font-light">
-                          Add this project to your projects list, the video,
-                          title, and thumbnail will be automaticlly uploaded.
+                          Add this project to your projects list, the video, and
+                          thumbnail will be automaticlly uploaded.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-5">
-                        {inputs.map((input, i: number) => {
-                          return input.type == "textarea" ? (
-                            <div className="grid gap-2" key={i}>
-                              <Label
-                                htmlFor={input.name}
-                                className="text-right"
-                              >
-                                {input.label}
-                              </Label>
-                              <textarea
-                                id={input.name}
-                                placeholder={input.placeholder}
-                                className="text-sm w-full p-2 font-light h-[100px] max-h-[200px] min-h-[50px] resize-y shadow-xs border border-gray-200"
-                                name={input.name}
+                        <div className="grid gap-2">
+                          <Label className="text-right" htmlFor="title">
+                            Title
+                          </Label>
+                          <Input
+                            id="title"
+                            name="title"
+                            className="text-sm font-light"
+                            placeholder="Project title."
+                            defaultValue={project.name}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Select onValueChange={setClient}>
+                            <SelectTrigger
+                              className="w-full"
+                              disabled={
+                                isFetching ||
+                                (data && data?.payload?.length < 1)
+                              }
+                            >
+                              <SelectValue placeholder="Project Client" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {data?.payload?.map((port, i: number) => {
+                                return (
+                                  <SelectItem value={port._id} key={i}>
+                                    {port.name}
+                                  </SelectItem>
+                                );
+                              })}
+                            </SelectContent>
+                          </Select>
+                          <Select onValueChange={setType}>
+                            <SelectTrigger
+                              className="w-full"
+                              disabled={
+                                isFetchingServices ||
+                                (services && services?.payload?.length < 1)
+                              }
+                            >
+                              <SelectValue
+                                placeholder={
+                                  services && services?.payload?.length > 0
+                                    ? "Project Type"
+                                    : "No Services"
+                                }
                               />
-                            </div>
-                          ) : input.type == "select" ? (
-                            <Select onValueChange={setType}>
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Project Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {input.options &&
-                                  input?.options.map((op, i: number) => {
-                                    return (
-                                      <SelectItem value={op.value} key={i}>
-                                        {op.name}
-                                      </SelectItem>
-                                    );
-                                  })}
-                              </SelectContent>
-                            </Select>
-                          ) : (
-                            <div className="grid gap-2" key={i}>
-                              <Label htmlFor={input.id} className="text-right">
-                                {input.label}
-                              </Label>
-                              <Input
-                                id={input.id}
-                                placeholder={input.placeholder}
-                                className="text-sm font-light"
-                                name={input.name}
-                              />
-                            </div>
-                          );
-                        })}
+                            </SelectTrigger>
+                            <SelectContent>
+                              {services?.payload?.map((service, i: number) => {
+                                return (
+                                  <SelectItem
+                                    value={service.name}
+                                    key={i}
+                                    className="capitalize"
+                                  >
+                                    {service.name}
+                                  </SelectItem>
+                                );
+                              })}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                       <DialogFooter className="pt-4">
                         <Button
                           type="submit"
                           className="w-full cursor-pointer"
-                          disabled={isPending}
+                          disabled={isPending || type == "" || client == ""}
                         >
                           {isPending ? "Adding..." : "Add"}
                         </Button>

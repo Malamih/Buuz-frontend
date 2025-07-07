@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ModernIconSelector } from "./IconSelector";
+import { EnhancedIconSelector } from "./IconSelector";
 import {
   Dialog,
   DialogContent,
@@ -150,14 +150,12 @@ export const Services = () => {
                       placeholder="Service Description"
                     ></textarea>
                   </div>
-                  <div className="w-full">
-                    <ModernIconSelector
-                      value={icon as string}
-                      onChange={setIcon}
-                      placeholder="Pick an icon"
-                      showClearButton
-                    />
-                  </div>
+                  <EnhancedIconSelector
+                    value={icon as string}
+                    onChange={setIcon}
+                    placeholder="Pick an icon"
+                    showClearButton
+                  />
                   <Button
                     className="bg-darkPrimary"
                     disabled={isPending || !icon}
@@ -169,6 +167,7 @@ export const Services = () => {
             </Dialog>
           </div>
         </div>
+
         <div className="services grid gap-2">
           {pageContent?.home?.services.map((service: Service, i: number) => {
             return (

@@ -7,6 +7,8 @@ import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import {
   BadgeCheck,
+  Briefcase,
+  Building2,
   ClipboardEdit,
   File,
   FileText,
@@ -31,6 +33,16 @@ export const Sidebar = () => {
       name: "Messages",
       path: "/dashboard/messages",
       icon: <MessageCircle width={18} />,
+    },
+    {
+      name: "Employees",
+      path: "/dashboard/employees",
+      icon: <Briefcase width={18} />,
+    },
+    {
+      name: "Clients",
+      path: "/dashboard/clients",
+      icon: <Building2 width={18} />,
     },
   ];
   const pagesLinks = [

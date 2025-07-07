@@ -1,11 +1,12 @@
 import ApiClient from "@/lib/apiClient";
 import vimeoApiClient from "@/lib/vimeoApiClient";
+import { Portfolio } from "@/types/portfolios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface Project {
   title: string;
   description: string;
-  client: string;
+  client: Portfolio;
   type: string;
   thumbnail: string;
   video: string;
@@ -34,6 +35,16 @@ export const useFetchVideos = (
     queryFn: endpoint.get,
     retry: false,
     meta: { params: { ...params } },
+  });
+};
+
+export const useFetchVideo = ({ id }: { id: string }) => {
+  const endpoint = new vimeoApiClient<any, any>(`/videos/${id}`);
+  return useQuery({
+    queryFn: endpoint.get,
+    queryKey: ["vision-video"],
+    retry: false,
+    enabled: false,
   });
 };
 

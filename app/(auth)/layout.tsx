@@ -1,7 +1,13 @@
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      <ProtectedRoute>{children}</ProtectedRoute>
+    </>
+  );
 }

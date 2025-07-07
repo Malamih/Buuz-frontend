@@ -19,9 +19,12 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { extractId } from "@/helpers/vimeo";
+import { useGetPortfoliosByFields } from "@/services/portfolios";
 import { useEditProject } from "@/services/projects";
+import { useGetServices } from "@/services/services";
 import { Project, useFetchVideos } from "@/services/vimeo";
 import { SelectValue } from "@radix-ui/react-select";
+import { PenIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -35,6 +38,7 @@ export const Edit = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("");
+  const [client, setClient] = useState("");
   const [videoId, setVideoId] = useState("");
   const success = (msg: string) => {
     toast.success(msg);
@@ -54,7 +58,7 @@ export const Edit = ({
     const projectData = {
       ...(form.get("title") && { title: form.get("title") }),
       ...(form.get("description") && { description: form.get("description") }),
-      ...(form.get("client") && { client: form.get("client") }),
+      ...(client != "" ? { client } : {}),
       ...(type && { type: type }),
       ...(data?.link && { video: data?.link }),
       ...(data?.uri && { video_uri: data?.uri }),
@@ -79,168 +83,148 @@ export const Edit = ({
     setVideoId(videoIdValue);
   };
 
-  const categories = [
-    {
-      name: "Commercial",
-      value: "commercial",
-    },
-    {
-      name: "Films",
-      value: "films",
-    },
-    {
-      name: "Short Films",
-      value: "short-films",
-    },
-    {
-      name: "Series",
-      value: "series",
-    },
-    {
-      name: "TV Programs",
-      value: "tv-programs",
-    },
-    {
-      name: "Video Clip",
-      value: "video-clip",
-    },
-    {
-      name: "Sketch",
-      value: "sketch",
-    },
-  ];
+  const { data: services, isFetching: isFetchingServices } = useGetServices();
+  const { data: portfolios, isFetching: isFetchingPortfolios } =
+    useGetPortfoliosByFields();
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
-      <DialogTrigger className="hover:bg-gray-100 cursor-pointer duration-100 transition w-full text-left text-sm p-2">
-        Edit
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[767px] bg-white">
-        <form onSubmit={(e) => editProject(e)}>
-          <DialogHeader className="pb-4">
-            <DialogTitle>Edit this project</DialogTitle>
-            <DialogDescription className="font-light">
-              This edits will effect the projects on the website not the
-              original project in vimeo.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-5">
-            <div className="grid gap-2">
-              <Label htmlFor="title" className="text-right">
-                Title
-              </Label>
-              <Input
-                id="title"
-                placeholder="Project title..."
-                className="text-sm font-light"
-                name="title"
-                defaultValue={project.title}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="description" className="text-right">
-                Description
-              </Label>
-              <textarea
-                id="description"
-                placeholder="Description..."
-                className="text-sm w-full p-2 rounded-sm font-light h-[100px] max-h-[200px] min-h-[50px] resize-y shadow-xs border border-gray-200"
-                name="description"
-                defaultValue={project.description}
-              />
-            </div>
-            <div className="flex justify-between gap-2">
-              <div className="grid gap-2 w-full">
-                <Label htmlFor="client" className="text-right">
-                  Client
+    <>
+      <Dialog onOpenChange={setOpen} open={open}>
+        <DialogTrigger asChild>
+          <Button variant={"outline"}>
+            <PenIcon />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[767px] bg-white">
+          <form onSubmit={(e) => editProject(e)}>
+            <DialogHeader className="pb-4">
+              <DialogTitle>Edit this project</DialogTitle>
+              <DialogDescription className="font-light">
+                This edits will effect the projects on the website not the
+                original project in vimeo.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-5">
+              <div className="grid gap-2">
+                <Label htmlFor="title" className="text-right">
+                  Title
                 </Label>
                 <Input
-                  id="client"
-                  placeholder="Project client..."
+                  id="title"
+                  placeholder="Project title..."
                   className="text-sm font-light"
-                  name="client"
-                  defaultValue={project.client}
+                  name="title"
+                  defaultValue={project.title}
                 />
               </div>
-              <div className="grid gap-2 w-full">
-                <Label htmlFor="type" className="text-right">
-                  Type
-                </Label>
-                <Select onValueChange={setType} defaultValue={project?.type}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Project Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cate, i: number) => {
-                      return (
-                        <SelectItem key={i} value={cate.value}>
-                          {cate.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <div className="thumbnail flex gap-2 mt-4 justify-between">
-                <div className="input flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="video_id"
-                      placeholder="Video id..."
-                      className="text-sm font-light w-full"
-                      name="video_id"
-                      value={videoIdValue}
-                      onInput={(e: any) => setVideoIdValue(e.target.value)}
-                    />
-                    <Button
-                      className="cursor-pointer bg-darkPrimary"
-                      type="button"
-                      onClick={fetchVideo}
-                      disabled={
-                        isFetching ||
-                        videoIdValue == project.project_id ||
-                        videoId == extractId(data?.uri)
-                      }
-                    >
-                      {isFetching ? <Loader color="white" /> : "Fetch"}
-                    </Button>
-                  </div>
-                  <Label htmlFor="video_id" className="text-right">
-                    Video id
+              <div className="flex justify-between gap-2">
+                <div className="grid gap-2 w-full">
+                  <Label htmlFor="client" className="text-right">
+                    Client
                   </Label>
-                  <p className="font-light text-sm">
-                    The thumbnail and the video will be taken from this project,
-                    You can get the project id from the project url like this:
-                    "https://vimeo.com/
-                    <span className="px-1 bg-green-100 border border-green-400 rounded-xs">
-                      project_id
-                    </span>
-                    "
-                  </p>
+                  <Select
+                    onValueChange={setClient}
+                    defaultValue={project?.client?._id}
+                    disabled={isFetchingPortfolios}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Client" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {portfolios?.payload?.map((portoflio, i: number) => {
+                        return (
+                          <SelectItem key={i} value={portoflio._id}>
+                            {portoflio.name}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Image
-                  src={data?.pictures?.base_link || project.thumbnail}
-                  alt="thumbnail"
-                  width={300}
-                  height={200}
-                  className="w-[40%]"
-                />
+                <div className="grid gap-2 w-full">
+                  <Label htmlFor="type" className="text-right">
+                    Type
+                  </Label>
+                  <Select
+                    onValueChange={setType}
+                    defaultValue={project?.type}
+                    disabled={isFetchingServices}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Project Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {services?.payload?.map((service, i: number) => {
+                        return (
+                          <SelectItem key={i} value={service.name}>
+                            {service.name}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <div className="thumbnail flex gap-2 mt-4 justify-between">
+                  <div className="input flex flex-col gap-2">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="video_id"
+                        placeholder="Video id..."
+                        className="text-sm font-light w-full"
+                        name="video_id"
+                        value={videoIdValue}
+                        onInput={(e: any) => setVideoIdValue(e.target.value)}
+                      />
+                      <Button
+                        className="cursor-pointer bg-darkPrimary"
+                        type="button"
+                        onClick={fetchVideo}
+                        disabled={
+                          isFetching ||
+                          videoIdValue == project.project_id ||
+                          videoId == extractId(data?.uri)
+                        }
+                      >
+                        {isFetching ? <Loader color="white" /> : "Fetch"}
+                      </Button>
+                    </div>
+                    <Label htmlFor="video_id" className="text-right">
+                      Video id
+                    </Label>
+                    <p className="font-light text-sm">
+                      The thumbnail and the video will be taken from this
+                      project, You can get the project id from the project url
+                      like this: "https://vimeo.com/
+                      <span className="px-1 bg-green-100 border border-green-400 rounded-xs">
+                        project_id
+                      </span>
+                      "
+                    </p>
+                  </div>
+                  <Image
+                    src={data?.pictures?.base_link || project.thumbnail}
+                    alt="thumbnail"
+                    width={300}
+                    height={200}
+                    className="w-[40%]"
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <DialogFooter className="pt-4">
-            <Button
-              type="submit"
-              className="w-full cursor-pointer bg-white border-gray-300 border text-black hover:bg-white"
-              disabled={false}
-            >
-              {isPending ? <Loader content="Editing" /> : "Edit"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className="pt-4">
+              <Button
+                type="submit"
+                className="w-full cursor-pointer bg-white border-gray-300 border text-black hover:bg-white"
+                disabled={false}
+              >
+                {isPending ? <Loader content="Editing" /> : "Edit"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };

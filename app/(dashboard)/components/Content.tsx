@@ -14,9 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import OptionsIcon from "@/assets/icons/options.svg";
 import { toast } from "sonner";
-import { Loader } from "@/components/loader";
 import { Project } from "@/services/vimeo";
-import { Edit } from "./Edit";
 import { useEffect, useState } from "react";
 import {
   Select,
@@ -25,12 +23,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGetServices } from "@/services/services";
+import { Button } from "@/components/ui/button";
+import { Edit } from "./Edit";
+import { TrashIcon } from "lucide-react";
+import { useGetPortfoliosByFields } from "@/services/portfolios";
+import clsx from "clsx";
 
 export const Content = () => {
   const [type, setType] = useState("");
+  const [client, setClient] = useState("");
 
   const { data, isFetching, error, refetch }: any = useGetProjects({
     ...(type == "all" ? {} : { type }),
+    ...(client == "all" ? {} : { client }),
   });
 
   const success = (message: string) => {
@@ -47,6 +53,15 @@ export const Content = () => {
       toast.error(error?.message || deleteError?.message);
     }
   }, [error, deleteError]);
+
+  const {
+    data: services,
+    isFetching: isFetchingServices,
+    error: servicesError,
+  } = useGetServices();
+
+  const { data: portfolios, isFetching: isFetchingPortfolios } =
+    useGetPortfoliosByFields();
   return (
     <div className="content" style={{ gridArea: "content" }}>
       <div className="header flex items-center justify-between">
@@ -54,19 +69,45 @@ export const Content = () => {
           Total Projects: {data?.payload?.length}
         </h1>
         <div className="options flex items-center gap-4">
-          <Select onValueChange={setType}>
-            <SelectTrigger className="rounded-sm">
+          <Select
+            onValueChange={setClient}
+            disabled={
+              (portfolios && portfolios?.payload?.length < 1) ||
+              isFetchingPortfolios
+            }
+          >
+            <SelectTrigger className="rounded-sm" defaultValue={"all"}>
+              <SelectValue placeholder="Filter By Project Client" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {portfolios?.payload?.map((portfolio, i: number) => {
+                return (
+                  <SelectItem value={portfolio._id} key={i}>
+                    {portfolio.name}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+          <Select
+            onValueChange={setType}
+            disabled={
+              (services && services?.payload?.length < 1) || isFetchingServices
+            }
+          >
+            <SelectTrigger className="rounded-sm" defaultValue={"all"}>
               <SelectValue placeholder="Filter By Project Category" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="commercial">Commercial</SelectItem>
-              <SelectItem value="films">Films</SelectItem>
-              <SelectItem value="short-films">Short Films</SelectItem>
-              <SelectItem value="series">Series</SelectItem>
-              <SelectItem value="tv-programs">TV Programs</SelectItem>
-              <SelectItem value="video-clip">Video Clip</SelectItem>
-              <SelectItem value="sketch">Sketch</SelectItem>
+              {services?.payload?.map((service, i: number) => {
+                return (
+                  <SelectItem value={service.name} key={i}>
+                    {service.name}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           <Link href={"/dashboard/import"}>
@@ -112,7 +153,15 @@ export const Content = () => {
                     <div className="client-type flex items-center gap-4 mt-4">
                       <div className="label-value flex items-center gap-2 text-sm">
                         <ClientIcon />
-                        <span>{project.client}</span>
+                        <span
+                          className={clsx({
+                            "text-gray-400": !project?.client,
+                          })}
+                        >
+                          {project?.client
+                            ? project?.client?.name
+                            : "No client"}
+                        </span>
                       </div>{" "}
                       <div className="label-value flex items-center gap-2 text-sm">
                         <TypeIcon />
@@ -122,25 +171,15 @@ export const Content = () => {
                   </div>
                 </div>
               </div>
-              <div className="options">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition duration-200">
-                      <OptionsIcon />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="mr-12">
-                    <DropdownMenuItem asChild>
-                      <Edit project={project} refetch={refetch} />
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => deleteProject(project._id)}
-                      className="hover:bg-gray-100 cursor-pointer duration-100 transition"
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="options flex flex-col gap-2">
+                <Button
+                  variant={"outline"}
+                  onClick={() => deleteProject(project._id)}
+                  disabled={isPending}
+                >
+                  <TrashIcon />
+                </Button>
+                <Edit project={project} refetch={refetch} />
               </div>
             </div>
           );

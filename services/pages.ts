@@ -41,12 +41,14 @@ export const useUpdateHomePageContent = (
     "/pages"
   );
   return useMutation({
-    mutationFn: (data: { pageContent: any }) =>
-      endpoint.put({
+    mutationFn: (data: { pageContent: any }) => {
+      console.log(data?.pageContent);
+      return endpoint.put({
         home: {
           ...data.pageContent?.home,
         },
-      }),
+      });
+    },
     onSuccess: (data) => {
       scss(data);
     },

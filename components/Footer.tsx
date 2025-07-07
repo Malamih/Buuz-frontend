@@ -4,6 +4,7 @@ import PhoneIcon from "@/assets/icons/phone.svg";
 import CursorIcon from "@/assets/icons/cursor.svg";
 import Link from "next/link";
 import Image from "next/image";
+import { SocialLinks } from "./SocialLinks";
 
 export const Footer = () => {
   return (
@@ -31,6 +32,7 @@ export const Footer = () => {
               <CursorIcon />
               <span>Baghdad, Al-Mansour</span>
             </div>
+            <SocialLinks />
           </div>
         </div>
         <ul className="links flex-1 w-full min-w-fit">

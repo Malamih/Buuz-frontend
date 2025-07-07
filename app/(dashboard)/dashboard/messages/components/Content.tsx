@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { deleteClient, getClients } from "@/services/clients";
 import { toast } from "sonner";
@@ -14,79 +14,69 @@ import {
 } from "@/components/ui/select";
 import { formatShortDateTime } from "@/lib/date";
 import { Button } from "@/components/ui/button";
-import { Trash2Icon } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronsUpDownIcon,
+  MinusIcon,
+  PlusIcon,
+  Trash2Icon,
+  TrashIcon,
+} from "lucide-react";
 import clsx from "clsx";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  useCreateService,
+  useDeleteService,
+  useGetServices,
+} from "@/services/services";
+import { queryClient } from "@/providers/QueryProvider";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { CommandList } from "cmdk";
+import { cn } from "@/lib/utils";
 
 export const Content = () => {
   const [email, setEmail] = useState("");
   const [emailInputValue, setEmailInputValue] = useState("");
   const [serviceValue, setService] = useState("all");
+  const [serviceDialogOpen, setServiceDialogOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const router = useRouter();
+
   const HandleAuthErorr = () => {
     Cookies.remove("token");
     router.push("/auth");
   };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setEmail(emailInputValue);
     }, 300);
     return () => clearTimeout(timeout);
   }, [emailInputValue]);
-  const services = [
-    {
-      value: "commercial",
-      label: "Commercial",
-      color: "rgba(255, 193, 7, 0.3)", // Golden yellow - premium, commercial appeal
-      borderColor: "#F57C00",
-    },
-    {
-      value: "films",
-      label: "Films",
-      color: "rgba(220, 53, 69, 0.3)", // Cinema red - classic movie theater
-      borderColor: "#C21807",
-    },
-    {
-      value: "short-films",
-      label: "Short Films",
-      color: "rgba(111, 66, 193, 0.3)", // Purple - artistic, creative
-      borderColor: "#6F42C1",
-    },
-    {
-      value: "series",
-      label: "Series",
-      color: "rgba(25, 135, 84, 0.3)", // Green - continuous, ongoing
-      borderColor: "#146C43",
-    },
-    {
-      value: "tv-programs",
-      label: "TV Programs",
-      color: "rgba(13, 110, 253, 0.3)", // Blue - broadcast, traditional TV
-      borderColor: "#0A58CA",
-    },
-    {
-      value: "video-clip",
-      label: "Video Clip",
-      color: "rgba(214, 51, 132, 0.3)", // Pink/magenta - modern, social media
-      borderColor: "#B02A5B",
-    },
-    {
-      value: "sketch",
-      label: "Sketch",
-      color: "rgba(253, 126, 20, 0.3)", // Orange - playful, comedy
-      borderColor: "#D63384",
-    },
-    {
-      value: "all",
-      label: "All",
-      color: "rgba(108, 117, 125, 0.3)", // Neutral gray - comprehensive
-      borderColor: "#495057",
-    },
-  ];
 
   const { data, isFetching, error, refetch } = getClients({
     email,
-    ...(serviceValue == "all" ? "" : { serviceValue }),
+    ...(serviceValue == "all" ? "" : { services: serviceValue }),
   });
+
   const scss = (msg: string) => {
     toast.success(msg);
     refetch();
@@ -100,6 +90,47 @@ export const Content = () => {
       toast.error(delete_error?.message || error?.message);
     }
   }, [delete_error, error]);
+
+  const {
+    mutate: createService,
+    isPending: isServicePending,
+    error: serviceError,
+  }: any = useCreateService((msg) => {
+    toast.success(msg);
+    setServiceDialogOpen(false);
+    queryClient.invalidateQueries({ queryKey: ["services"] });
+  });
+
+  useEffect(() => {
+    if (serviceError) {
+      toast.error(serviceError.message);
+    }
+  }, [serviceError]);
+
+  const handleCreateService = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = new FormData(e.target as HTMLFormElement);
+    const data = { name: form.get("name") };
+    createService(data);
+  };
+
+  const {
+    data: services,
+    isFetching: isFetchingServices,
+    error: servicesError,
+  } = useGetServices();
+
+  const {
+    mutate: deleteService,
+    isPending: isServiceDeletePending,
+    error: serviceDeleteError,
+  } = useDeleteService((msg) => {
+    toast.success(msg);
+    setServiceDialogOpen(false);
+    setService("");
+    queryClient.invalidateQueries({ queryKey: ["services"] });
+  });
+
   return (
     <>
       <header className="flex items-center justify-between">
@@ -109,27 +140,122 @@ export const Content = () => {
           value={emailInputValue}
           onInput={(e: any) => setEmailInputValue(e.target.value)}
         />
-        <Select defaultValue="all" onValueChange={setService}>
-          <SelectTrigger className="w-[250px]">
-            <SelectValue placeholder="Services" />
-          </SelectTrigger>
-          <SelectContent>
-            {services.map((service, i: number) => {
-              return (
-                <SelectItem value={service.value} key={i}>
-                  <div
-                    className="ball w-[10px] h-[10px] border rounded-full"
-                    style={{
-                      background: service.color,
-                      borderColor: service.borderColor,
-                    }}
-                  ></div>
-                  {service.label}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
+        <div className="options flex items-center gap-2">
+          <Dialog open={serviceDialogOpen} onOpenChange={setServiceDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusIcon /> New Service
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>New Service</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleCreateService}>
+                <div className="input">
+                  <Label className="mb-2">Name</Label>
+                  <Input
+                    placeholder="Service name"
+                    name="name"
+                    className={clsx({
+                      "border-destructive": serviceError?.fieldsError?.name,
+                    })}
+                  />
+                </div>
+                <Button className="w-full mt-4" disabled={isServicePending}>
+                  Add
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                disabled={
+                  isFetchingServices ||
+                  (services && services?.payload?.length < 1)
+                }
+                variant="outline"
+                role="combobox"
+                aria-expanded={servicesOpen}
+                className="w-[200px] justify-between"
+              >
+                {services?.payload?.find(
+                  (service) => service.name === serviceValue
+                )?.name
+                  ? serviceValue
+                  : "Select Type..."}
+                <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[220px] px-3 py-2">
+              <Command>
+                <CommandInput placeholder="Search Types..." />
+                <CommandList className="mt-2">
+                  <CommandEmpty>No types found</CommandEmpty>
+                  <CommandGroup>
+                    <CommandItem
+                      className="capitalize cursor-pointer"
+                      key={"all"}
+                      value={"all"}
+                      onSelect={(currentValue) => {
+                        setService(
+                          currentValue === serviceValue ? "" : currentValue
+                        );
+                        setServiceDialogOpen(false);
+                      }}
+                    >
+                      <div className="content flex-[1] flex gap-2">
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            serviceValue == "all" ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        All
+                      </div>
+                    </CommandItem>
+                    {services?.payload?.map((service, i: number) => {
+                      return (
+                        <CommandItem
+                          className="capitalize"
+                          key={service.name}
+                          value={service.name}
+                          onSelect={(currentValue) => {
+                            setService(
+                              currentValue === serviceValue ? "" : currentValue
+                            );
+                            setServiceDialogOpen(false);
+                          }}
+                        >
+                          <div className="content flex-[1] flex gap-2">
+                            <CheckIcon
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                serviceValue == service?.name
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {service.name}
+                          </div>
+                          <Button
+                            size={"sm"}
+                            variant={"outline"}
+                            className="w-6 h-6"
+                            onClick={() => deleteService({ id: service._id })}
+                          >
+                            <TrashIcon />
+                          </Button>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
       </header>
       {data?.payload?.length == 0 && (
         <span className="text-center text-xl text-gray-400 w-full inline-block py-8">
@@ -140,10 +266,10 @@ export const Content = () => {
         {data?.payload?.map((client, i: number) => {
           return (
             <div
-              className="client w-full md:w-[calc(50%-1rem)] px-4 py-2 rounded-lg border border-gray-300"
+              className="client w-full flex flex-col md:w-[calc(50%-1rem)] px-4 py-2 rounded-lg border border-gray-300"
               key={i}
             >
-              <header className="mb-1 flex items-center justify-between gap-4">
+              <header className="mb-4 flex justify-between gap-6">
                 <div className="title w-full">
                   <h1 className="text-lg font-medium leading-5 flex items-center justify-between w-full gap-2">
                     {client.name}
@@ -163,12 +289,13 @@ export const Content = () => {
                   variant={"outline"}
                   disabled={isPending}
                   onClick={() => mutate({ id: client._id })}
+                  aria-disabled={isServiceDeletePending}
                 >
                   <Trash2Icon />
                 </Button>
               </header>
-              <div className="message-services">
-                <p className="text-sm text-gray-600">{client.message}</p>
+              <div className="message-services flex flex-col flex-[1]">
+                <p className="flex-[1] text-sm">{client.message}</p>
                 <ul className="services mt-4 flex flex-wrap gap-4">
                   {client?.services?.map((service, i: number) => {
                     return (
@@ -181,30 +308,17 @@ export const Content = () => {
                             "ball w-[10px] h-[10px] border rounded-full"
                           )}
                           style={{
-                            backgroundColor: services.find(
-                              (s) => s.value === service
-                            )?.color,
-                            borderColor: services.find(
-                              (s) => s.value === service
-                            )?.borderColor,
+                            borderColor:
+                              services?.payload.find(
+                                (s) => s.name === service
+                              ) && "gray-50",
                           }}
                         ></div>
                         <span
                           className={clsx(
-                            "capitalize py-1 px-2 rounded-full border"
+                            "capitalize py-1 px-3 rounded-full border"
                           )}
-                          style={{
-                            background:
-                              service == serviceValue
-                                ? services.find((s) => s.value == service)
-                                    ?.color
-                                : "",
-                            borderColor:
-                              service == serviceValue
-                                ? services.find((s) => s.value == service)
-                                    ?.borderColor
-                                : "",
-                          }}
+                          style={{}}
                         >
                           {service}
                         </span>

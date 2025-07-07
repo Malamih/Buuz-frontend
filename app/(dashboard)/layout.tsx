@@ -1,5 +1,6 @@
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export const metadata = {
   title: "Dashboard",
@@ -14,7 +15,7 @@ export default function DashboardLayout({
     <div className="dashboardLayout">
       <Sidebar />
       <Header />
-      {children}
+      <ProtectedRoute>{children}</ProtectedRoute>
     </div>
   );
 }

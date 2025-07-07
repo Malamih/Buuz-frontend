@@ -10,6 +10,13 @@ import { addClient } from "@/services/clients";
 import DotLoader from "./Loader";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
+import { useGetServices } from "@/services/services";
+import { Button } from "@/components/ui/button";
+
+interface Service {
+  name: string;
+  active: boolean;
+}
 
 export const ContactForm = () => {
   const title = useRef<HTMLHeadingElement>(null);
@@ -30,54 +37,23 @@ export const ContactForm = () => {
       delay: 0.5,
     });
   }, []);
-  const [servicesCheckBoxes, setServicesCheckBoxes] = useState([
-    {
-      title: "Commercial",
-      active: false,
-      value: "commercial",
-      name: "service",
-    },
-    {
-      title: "Films",
-      active: false,
-      value: "films",
-      name: "service",
-    },
-    {
-      title: "Short films",
-      active: false,
-      value: "short-films",
-      name: "service",
-    },
-    {
-      title: "Series",
-      active: false,
-      value: "series",
-      name: "service",
-    },
-    {
-      title: "TV Programs",
-      active: false,
-      value: "tv-programs",
-      name: "service",
-    },
-    {
-      title: "Video clip",
-      active: false,
-      value: "video-clip",
-      name: "service",
-    },
-    {
-      title: "Sketch",
-      active: false,
-      value: "sketch",
-      name: "service",
-    },
-  ]);
+  const [servicesCheckBoxes, setServicesCheckBoxes] = useState<Service[]>([]);
+
+  const { data, isFetching } = useGetServices();
+
+  useEffect(() => {
+    if (data?.payload) {
+      const servicesWithActive = data?.payload?.map((service) => {
+        const newService = { name: service.name, active: false };
+        return newService;
+      });
+      setServicesCheckBoxes(servicesWithActive);
+    }
+  }, [data]);
 
   const setActive = (value: string) => {
     const services = [...servicesCheckBoxes];
-    const index = services.findIndex((service) => service.value == value);
+    const index = services.findIndex((service) => service.name == value);
     services[index].active = !services[index].active;
     setServicesCheckBoxes(services);
   };
@@ -94,7 +70,7 @@ export const ContactForm = () => {
     const form = new FormData(e.target);
     const services = [] as string[];
     servicesCheckBoxes.forEach((s) => {
-      s.active && services.push(s.value);
+      s.active && services.push(s.name);
     });
     const data = {
       name: form.get("name"),
@@ -177,11 +153,11 @@ export const ContactForm = () => {
                     key={i}
                   >
                     <label
-                      htmlFor={service.value}
+                      htmlFor={service.name}
                       className={clsx(
                         "input relative min-w-[20px] min-h-[20px] border border-[#848484]",
                         {
-                          // "border-red-400": error?.fieldErrors?.services,
+                          "border-red-400": error?.fieldErrors?.services,
                         }
                       )}
                     >
@@ -198,28 +174,31 @@ export const ContactForm = () => {
                       <input
                         type="checkbox"
                         className="hidden"
-                        onInput={() => setActive(service.value)}
+                        onInput={() => setActive(service.name)}
                         name={service.name}
-                        value={service.value}
-                        id={service.value}
+                        value={service.name}
+                        id={service.name}
                       />
                     </label>
                     <label
-                      htmlFor={service.value}
-                      className={clsx("cursor-pointer select-none", {
+                      htmlFor={service.name}
+                      className={clsx("cursor-pointer capitalize select-none", {
                         // "text-red-400": error?.fieldErrors,
                       })}
                     >
-                      {service.title}
+                      {service.name}
                     </label>
                   </div>
                 );
               })}
             </div>
           </div>
-          <button className="text-3xl py-4 px-4 h-[70px] bg-[#262626] mt-4 cursor-pointer text-white rounded-xl">
+          <Button
+            disabled={isPending}
+            className="text-3xl py-4 px-4 h-[70px] hover:bg-[#262626d6] bg-[#262626] mt-4 cursor-pointer text-white rounded-xl"
+          >
             {isPending ? <DotLoader /> : "Get Started"}
-          </button>
+          </Button>
         </form>
       </div>
     </section>

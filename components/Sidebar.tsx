@@ -11,6 +11,7 @@ import EmailIcon from "@/assets/icons/email.svg";
 import PhoneIcon from "@/assets/icons/phone.svg";
 import CursorIcon from "@/assets/icons/cursor.svg";
 import { Button } from "./Button";
+import { SocialLinks } from "./SocialLinks";
 
 export const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -174,6 +175,10 @@ export const Sidebar = () => {
       path: "/portfolio/first",
     },
     {
+      name: "Our clients",
+      path: "/#our-clients",
+    },
+    {
       name: "Contact us",
       path: "/contact-us",
     },
@@ -247,7 +252,7 @@ export const Sidebar = () => {
           })}
         </ul>
         <div className="contactInfo py-2 px-8 pb-6">
-          <div className="content flex flex-col gap-6 mt-8">
+          <div className="content flex flex-col gap-6 mt-8 mb-4">
             <div className="label-value flex items-center gap-4">
               <EmailIcon />
               <span>info@beez-production.com</span>
@@ -261,6 +266,7 @@ export const Sidebar = () => {
               <span>Baghdad, Al-Mansour</span>
             </div>
           </div>
+          <SocialLinks />
         </div>
         <Link href={"/contact-us"} className="p-4 w-full md:hidden">
           <Button

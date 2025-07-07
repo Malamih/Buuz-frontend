@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { LensiProvider } from "@/providers/LenisProvider";
+import { LenisProvider } from "@/providers/LenisProvider";
 
 export default function MainLayout({
   children,
@@ -8,10 +8,12 @@ export default function MainLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <LensiProvider>
-      <Header />
-      {children}
-      <Footer />
-    </LensiProvider>
+    <>
+      <LenisProvider>
+        <Header />
+        {children}
+        <Footer />
+      </LenisProvider>
+    </>
   );
 }

@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const BASE_URL = "https://buuz-api.onrender.com";
+// export const BASE_URL = "https://buuz-api.onrender.com";
+export const BASE_URL = "http://localhost:3000";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

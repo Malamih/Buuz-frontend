@@ -26,17 +26,8 @@ export const Header = () => {
       style={{ gridArea: "header" }}
       className="h-full flex items-center justify-between px-4 pr-10 sticky top-0 left-0 bg-white border-b border-b-gray-300 z-10"
     >
-      <h1 className="text-lg capitalize">
-        {pageName == "dashboard" ? "Projects" : pageName}
-      </h1>
+      <h1>Buuz Dashboard</h1>
       <div className="flex items-center gap-4">
-        {/* <div className="settings">
-          <Link href={"/dashboard/settings"}>
-            <div className="icon w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-gray-100 hover:border-black cursor-pointer">
-              <SettingsIcon />
-            </div>
-          </Link>
-        </div> */}
         <div className="profile">
           <Popover>
             <PopoverTrigger>

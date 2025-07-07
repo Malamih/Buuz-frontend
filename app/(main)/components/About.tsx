@@ -84,15 +84,23 @@ export const About = () => {
   return (
     <>
       <section className="about pt-14 bg-gray-100" ref={container}>
-        <div className="container  mb-14 flex flex-col md:flex-row gap-12 justify-between">
-          <div className="main w-full max-w-[600px] font-light overflow-hidden">
+        <div className="container  mb-14 gap-12 justify-between">
+          <div className="main flex flex-col md:flex-row gap-12 w-full font-light overflow-hidden">
             <h1
-              className="font-bold text-5xl md:text-6xl md:text-left lg:text-8xl mb-12 text-center -translate-x-[100%] opacity-0"
+              className="font-bold text-5xl w-full md:text-6xl md:text-left lg:text-8xl mb-12 text-center -translate-x-[100%] opacity-0"
               ref={title}
             >
               About Us
             </h1>
-            <div className="content text-xl">
+            <p
+              className="mb-16 -translate-x-24 opacity-0 w-full"
+              ref={textBlock2}
+            >
+              {pageContent?.home?.about_us}
+            </p>
+          </div>
+          <div className="mission text-xl gap-12 flex flex-col md:flex-row font-light w-full">
+            <div className="content text-xl w-full">
               <h2
                 className="font-bold mb-8 translate-y-12 opacity-0"
                 ref={subTitle1}
@@ -106,12 +114,7 @@ export const About = () => {
                 {pageContent?.home?.who_we_are}
               </p>
             </div>
-          </div>
-          <div className="mission text-xl font-light w-full max-w-[700px]">
-            <p className="mb-16 -translate-x-24 opacity-0" ref={textBlock2}>
-              {pageContent?.home?.about_us}
-            </p>
-            <div className="content">
+            <div className="content w-full">
               <h2
                 className="font-bold mb-12 translate-y-12 opacity-0"
                 ref={subTitle2}

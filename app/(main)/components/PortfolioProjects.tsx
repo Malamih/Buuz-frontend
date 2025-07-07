@@ -130,7 +130,7 @@ export const PortfolioProjects = () => {
                       </div>
                       <div className="label-value flex-[1] max-w-[300px] text-xs md:text-lg">
                         <h1 className="font-bold">CLIENT</h1>
-                        <p className="font-light">{project.client}</p>
+                        <p className="font-light">{project.client?.name}</p>
                       </div>
                       <div className="label-value flex-[1] max-w-[300px] text-xs md:text-lg">
                         <h1 className="font-bold">TYPE</h1>

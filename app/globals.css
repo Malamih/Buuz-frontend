@@ -59,10 +59,49 @@ body {
   background: #dab73a2c;
 }
 
+.vimeo-crop-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.vimeo-crop-container iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%; /* Oversized to fill and crop */
+  height: 150%;
+}
+
+html {
+  will-change: scroll-position;
+  scroll-behavior: smooth;
+}
+
 .whiteIcon {
   fill: white;
 }
 
 html {
   scrollbar-gutter: stable;
+}
+
+html.has-scroll-smooth {
+  overflow: hidden;
+}
+
+html.has-scroll-dragging {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.has-scroll-smooth body {
+  overflow: hidden;
+}
+
+.has-scroll-smooth [data-scroll-container] {
+  min-height: 100vh;
 }

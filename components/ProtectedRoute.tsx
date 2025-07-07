@@ -9,9 +9,9 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { mutate, error, isPending } = useCheckAuth((msg) => {
-    router.push("/dashboard");
-  });
+
+  const { mutate, error, isPending } = useCheckAuth((msg) => {});
+
   useEffect(() => {
     if (error) {
       Cookies.remove("token");
@@ -22,6 +22,11 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, [error]);
 
   useEffect(() => {
+    mutate({});
+  }, []);
+
+  useEffect(() => {
+    if (isPending) return;
     const token = Cookies.get("token");
     if (!token && pathname.includes("/dashboard")) {
       Cookies.remove("token");
@@ -34,7 +39,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         setMounted(true);
       }, 400);
     }
-  }, []);
+  }, [isPending]);
 
   if (!mounted || isPending) return <>Loading...</>;
   return <>{children}</>;

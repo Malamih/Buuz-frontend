@@ -204,7 +204,7 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
                 </div>
                 <div className="label-value text-xs lg:text-lg">
                   <h1 className="font-bold">CLIENT</h1>
-                  <p className="font-light">{data?.project?.client}</p>
+                  <p className="font-light">{data?.project?.client?.name}</p>
                 </div>
                 <div className="label-value text-xs lg:text-lg">
                   <h1 className="font-bold">TYPE</h1>

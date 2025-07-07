@@ -1,6 +1,6 @@
 "use client";
 import { useGetProjects } from "@/services/projects";
-import { PauseIcon, PlayIcon } from "lucide-react";
+import { PauseIcon, PlayIcon, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -107,7 +107,7 @@ export const Projects = () => {
             return (
               <Link href={`/portfolio/${project._id}`} key={i}>
                 <div
-                  className="project w-full max-h-[300px] flex flex-col gap-4 cursor-pointer hover:[&_img]:opacity-70 transition duration-100 hover:[&_button]:scale-100"
+                  className="project w-full max-h-[300px] flex flex-col gap-4 cursor-pointer hover:[&_img]:opacity-90 hover:[&_.client]:opacity-100 transition duration-100 hover:[&_button]:scale-100"
                   key={i}
                 >
                   <div className="thumbnail relative w-full rounded-[25px] overflow-hidden">
@@ -122,6 +122,11 @@ export const Projects = () => {
                     >
                       {project._id == id ? <PauseIcon /> : <PlayIcon />}
                     </button>
+                    <div className="client absolute z-10 top-4 left-4 opacity-0 text-xl font-bold transition duration-200">
+                      <h2 className="flex gap-2">
+                        <User /> {project?.client?.name}
+                      </h2>
+                    </div>
                     <Image
                       src={project.thumbnail}
                       alt="thumbnail"
