@@ -84,7 +84,7 @@ export const About = () => {
   return (
     <>
       <section className="about pt-14 bg-gray-100" ref={container}>
-        <div className="container  mb-14 gap-12 justify-between">
+        <div className="container  m gap-12 justify-between">
           <div className="main flex flex-col md:flex-row gap-12 w-full font-light overflow-hidden">
             <h1
               className="font-bold text-5xl w-full md:text-6xl md:text-left lg:text-8xl mb-12 text-center -translate-x-[100%] opacity-0"
@@ -127,7 +127,6 @@ export const About = () => {
             </div>
           </div>
         </div>
-        <Projects />
       </section>
     </>
   );

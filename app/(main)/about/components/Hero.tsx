@@ -1,5 +1,6 @@
 "use client";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/all";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
@@ -8,6 +9,9 @@ export const Hero = () => {
   const desc = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
     if (!title.current || !desc.current) return;
     const titleSpans = title.current.querySelectorAll("span");
     const descSpans = desc.current.querySelectorAll("span");

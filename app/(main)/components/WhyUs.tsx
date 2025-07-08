@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import _ScrollTrigger, { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,6 +22,13 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
   const imageRef = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const reasonsWrapper = useRef<HTMLDivElement>(null);
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
+
+  // Memoized cleanup function
+  const cleanup = useCallback(() => {
+    scrollTriggersRef.current.forEach((trigger) => trigger.kill());
+    scrollTriggersRef.current = [];
+  }, []);
 
   useEffect(() => {
     if (pageContent?.home) {
@@ -29,19 +36,9 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
     }
   }, [pageContent]);
 
+  // Single ScrollTrigger setup effect
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  useEffect(() => {
-    ScrollTrigger.saveStyles(".image");
-    ScrollTrigger.config({
-      autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize",
-    });
+    // iOS detection and optimization
     const isIOS =
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !("MSStream" in window);
 
@@ -50,24 +47,22 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
       ScrollTrigger.defaults({
         preventOverlaps: true,
         fastScrollEnd: true,
-        onUpdate: (self) => {
-          if (!self.isActive) return;
-          window.requestAnimationFrame(() => {});
-        },
       });
     }
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
 
-  // Pin image animation (only runs once when container is ready)
+    // Configure ScrollTrigger once
+    ScrollTrigger.config({
+      autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+    });
+
+    return cleanup;
+  }, [cleanup]);
+
+  // Pin image animation - optimized with better performance settings
   useEffect(() => {
     if (!imageRef.current || !container.current) return;
 
-    ScrollTrigger.saveStyles(".image");
-
-    const trigger = ScrollTrigger.create({
+    const pinTrigger = ScrollTrigger.create({
       trigger: container.current,
       start: "top 120px",
       end: "bottom bottom",
@@ -76,46 +71,98 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
       anticipatePin: 1,
       fastScrollEnd: true,
       invalidateOnRefresh: true,
+      // Performance optimizations
+      refreshPriority: -1,
+      onUpdate: (self) => {
+        // Throttle updates for better performance
+        if (self.progress % 0.1 < 0.01) {
+          gsap.set(imageRef.current, { force3D: true });
+        }
+      },
     });
 
+    scrollTriggersRef.current.push(pinTrigger);
+
     return () => {
-      trigger.kill();
+      pinTrigger.kill();
+      scrollTriggersRef.current = scrollTriggersRef.current.filter(
+        (t) => t !== pinTrigger
+      );
     };
   }, []);
 
-  // Reasons animation (runs when reasons change)
+  // Reasons animation - optimized with batch processing
   useGSAP(() => {
     if (!reasonsWrapper.current || reasons.length === 0) return;
 
-    // Clear existing reason animations first
-    const existingTriggers = ScrollTrigger.getAll().filter(
+    // Clear existing reason animations
+    const existingReasonTriggers = scrollTriggersRef.current.filter(
       (trigger) =>
         trigger.vars.trigger &&
         trigger.vars.trigger instanceof Element &&
         trigger.vars.trigger.classList.contains("reason")
     );
-    existingTriggers.forEach((trigger) => trigger.kill());
-
-    // Simple fade in animation for reasons
-    const reasonElements = reasonsWrapper.current.querySelectorAll(".reason");
-    reasonElements.forEach((reason) => {
-      gsap.to(reason, {
-        opacity: 1,
-        y: 0,
-        x: 0,
-        scrollTrigger: {
-          trigger: reason,
-          scrub: 0.3,
-          start: "top 100%",
-          end: "top 50%",
-          toggleActions: "play none none reverse",
-        },
-      });
+    existingReasonTriggers.forEach((trigger) => {
+      trigger.kill();
+      scrollTriggersRef.current = scrollTriggersRef.current.filter(
+        (t) => t !== trigger
+      );
     });
 
-    // Refresh ScrollTrigger after adding new animations
-    ScrollTrigger.refresh();
+    // Batch DOM queries
+    const reasonElements = reasonsWrapper.current.querySelectorAll(".reason");
+
+    // Set initial states in batch
+    gsap.set(reasonElements, {
+      opacity: 0,
+      y: 200,
+      x: 0,
+      force3D: true, // Enable hardware acceleration
+    });
+
+    // Create animations with performance optimizations
+    reasonElements.forEach((reason) => {
+      const reasonTrigger = ScrollTrigger.create({
+        trigger: reason,
+        start: "top 100%",
+        end: "top 50%",
+        scrub: 0.3,
+        fastScrollEnd: true,
+        // Reduce refresh frequency for better performance
+        refreshPriority: 0,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          gsap.to(reason, {
+            opacity: progress,
+            y: 200 * (1 - progress),
+            duration: 0.1,
+            ease: "none",
+            overwrite: true,
+          });
+        },
+      });
+
+      scrollTriggersRef.current.push(reasonTrigger);
+    });
+
+    // Single refresh after all animations are set up
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
   }, [reasons]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
+
+  useEffect(() => {
+    if (pageContent) {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 600);
+    }
+  }, [pageContent]);
 
   return (
     <section className={twMerge("overflow-hidden relative", classes)}>
@@ -139,7 +186,7 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
             {reasons?.map((reason, i: number) => {
               return (
                 <div
-                  className="reason flex relative gap-5 min-h-[300px] mb-8 opacity-0 translate-y-[200px]"
+                  className="reason flex relative gap-5 min-h-[300px] mb-8"
                   key={i}
                 >
                   <div className="icon hidden md:inline-block flex-shrink-0">
@@ -165,6 +212,7 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
             style={{
               willChange: "transform",
               backfaceVisibility: "hidden",
+              transform: "translate3d(0, 0, 0)", // Force hardware acceleration
               height: "calc(100vh - 240px)",
               position: "relative",
             }}
@@ -176,6 +224,7 @@ export const WhyUs = ({ classes }: { classes?: string }) => {
               height={1000}
               alt="Image"
               className="w-full h-full object-cover"
+              priority // Add priority loading for better performance
             />
           </div>
         </div>

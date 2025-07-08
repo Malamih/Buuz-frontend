@@ -12,7 +12,9 @@ export const PageContentHandler = () => {
   useEffect(() => {
     if (data) {
       setPageContent(data);
-      ScrollTrigger.refresh();
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 400);
     }
   }, [data]);
   return <></>;

@@ -1,3 +1,4 @@
+import { OurClients } from "../components/OurClients";
 import { Projects } from "../components/Projects";
 import { Services } from "../components/Services";
 import { ValueEl } from "../components/Value";
@@ -9,7 +10,6 @@ const ServicesPage = () => {
       <Hero />
       <Services classes="bg-white text-black" title={false} />
       <Projects />
-      <ValueEl />
     </>
   );
 };

@@ -9,7 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { validateImageFile } from "@/helpers/image";
 import { queryClient } from "@/providers/QueryProvider";
+import { useUpdateHomePageProjects } from "@/services/pages";
 import { useUpdatePortfolio } from "@/services/portfolios";
+import { Project } from "@/services/vimeo";
+import { useMainStore } from "@/stores/main";
 import { Portfolio } from "@/types/portfolios";
 import clsx from "clsx";
 import { Pencil } from "lucide-react";
@@ -18,6 +21,8 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const Edit = ({ portfolio }: { portfolio: Portfolio }) => {
+  const { pageContent, setPageContent } = useMainStore((state) => state);
+
   const [open, setOpen] = useState(false);
   const [logo, setLogo] = useState("");
   const [image, setImage] = useState("");
@@ -35,6 +40,14 @@ export const Edit = ({ portfolio }: { portfolio: Portfolio }) => {
       });
     }
   };
+  const {
+    mutate: updateHomePageProjects,
+    isPending: isUpdatingHomePageProjects,
+    error: homePageProjectsError,
+  } = useUpdateHomePageProjects((data) => {
+    toast.success(data.message);
+    setPageContent(data.updated_data);
+  });
 
   useEffect(() => {
     if (!open) {
@@ -47,9 +60,45 @@ export const Edit = ({ portfolio }: { portfolio: Portfolio }) => {
     mutate,
     isPending,
     error: updateError,
-  } = useUpdatePortfolio((msg) => {
-    toast.success(msg);
+  } = useUpdatePortfolio((data) => {
+    toast.success(data.message);
     queryClient.invalidateQueries({ queryKey: ["portfolios"] });
+    const aboutProjects = pageContent?.home?.aboutProjects;
+    const portfolioProjects = pageContent?.home?.portfolioProjects;
+    if (aboutProjects?.length > 0) {
+      const updatedProjects = aboutProjects?.map((project: Project) => {
+        if (project?.client?._id == data?.payload?._id) {
+          let newProject = { ...project, client: data?.payload };
+          return newProject;
+        }
+      });
+
+      if (updatedProjects && updatedProjects?.length > 0) {
+        updateHomePageProjects({
+          section: "aboutProjects",
+          projects: [...updatedProjects] as Project[],
+          pageContent,
+        });
+      }
+    }
+    if (portfolioProjects?.length > 0) {
+      const updatedProjects = portfolioProjects?.map((project: Project) => {
+        if (project?.client?._id == data?.payload?._id) {
+          let newProject = { ...project, client: data?.payload };
+          return newProject;
+        } else {
+          return project;
+        }
+      });
+
+      if (updatedProjects && updatedProjects?.length > 0) {
+        updateHomePageProjects({
+          section: "portfolioProjects",
+          projects: [...updatedProjects] as Project[],
+          pageContent,
+        });
+      }
+    }
     setOpen(false);
   }, portfolio._id) as {
     mutate: (data: FormData) => void;

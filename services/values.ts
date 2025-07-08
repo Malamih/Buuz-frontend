@@ -8,6 +8,7 @@ export const getValues = (params: {}) => {
     queryFn: endpoint.get,
     queryKey: ["values", params],
     meta: { params: { ...params } },
+    retry: 1,
   });
 };
 

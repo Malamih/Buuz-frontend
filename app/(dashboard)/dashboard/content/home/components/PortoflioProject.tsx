@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Project } from "@/services/vimeo";
 import { useSortable } from "@dnd-kit/sortable";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { CSS } from "@dnd-kit/utilities";
 import { useUpdateHomePageProjects } from "@/services/pages";
@@ -53,12 +53,21 @@ export const PortfolioProject = ({ project }: { project: Project }) => {
         {...attributes}
         {...listeners}
       >
-        <Image
-          src={project.thumbnail}
-          width={200}
-          height={100}
-          alt="Thumnail"
-        />
+        <div className="image-content flex gap-2">
+          <Image
+            src={project.thumbnail}
+            width={200}
+            height={100}
+            alt="Thumnail"
+          />
+          <div className="content flex flex-col py-2">
+            <h1 className="font-bold flex-[1]">{project?.title}</h1>
+            <p className="flex gap-2 items-center">
+              <UserIcon width={18} />
+              {project?.client?.name}
+            </p>
+          </div>
+        </div>
         <div className="options flex items-start gap-2 p-2">
           <Button
             variant={"ghost"}

@@ -6,9 +6,18 @@ export interface ProjectsResponse {
   message: string;
   payload: Project[];
 }
+export interface ProjectResponse {
+  message: string;
+  payload: Project;
+}
 
 interface DeleteResponse {
   message: string;
+}
+
+export interface UpdateResponse {
+  message: string;
+  result: Project;
 }
 export const useGetProjects = (params?: any) => {
   const endpont = new ApiClient<any, ProjectsResponse>(`/projects`);
@@ -18,11 +27,12 @@ export const useGetProjects = (params?: any) => {
     meta: { params: { ...params } },
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retry: 1,
   });
 };
 
 export const useGetProject = (params?: any) => {
-  const endpont = new ApiClient<any, ProjectsResponse>(
+  const endpont = new ApiClient<any, ProjectResponse>(
     `/projects/${params?.id}`
   );
   return useQuery({
@@ -45,12 +55,12 @@ export const useDeleteProject = (success: (message: string) => void) => {
   });
 };
 
-export const useEditProject = (success: (message: string) => void) => {
+export const useEditProject = (success: (data: UpdateResponse) => void) => {
   return useMutation({
     mutationFn: (data: any) =>
-      new ApiClient<any, DeleteResponse>(`/projects/${data.id}`).put(data),
+      new ApiClient<any, UpdateResponse>(`/projects/${data.id}`).put(data),
     onSuccess: (data) => {
-      success(data.message);
+      success(data);
     },
   });
 };

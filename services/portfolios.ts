@@ -27,6 +27,7 @@ export const useGetPortfolios = (params?: {}) => {
     queryFn: endpoint.get,
     queryKey: ["portfolios", params],
     meta: { params },
+    retry: 1,
   });
 };
 
@@ -58,12 +59,15 @@ export const useDeletePortfolio = (scss: (msg: string) => void) => {
   });
 };
 
-export const useUpdatePortfolio = (scss: (msg: string) => void, id: string) => {
+export const useUpdatePortfolio = (
+  scss: (data: UpdatePortfolio) => void,
+  id: string
+) => {
   const endpoint = new ApiClient<any, UpdatePortfolio>("/portfolios");
   return useMutation({
     mutationFn: (data: FormData) => endpoint.put(data, id),
     onSuccess: (res) => {
-      scss(res.message);
+      scss(res);
     },
   });
 };

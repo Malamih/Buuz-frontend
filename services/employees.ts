@@ -11,6 +11,7 @@ export const useGetEmployees = (params?: {}) => {
     queryFn: endpoint.get,
     queryKey: ["employees", params],
     meta: { params },
+    retry: false,
   });
 };
 

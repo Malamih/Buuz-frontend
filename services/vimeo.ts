@@ -35,6 +35,7 @@ export const useFetchVideos = (
     queryFn: endpoint.get,
     retry: false,
     meta: { params: { ...params } },
+    enabled: false,
   });
 };
 

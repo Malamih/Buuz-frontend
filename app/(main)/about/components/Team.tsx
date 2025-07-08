@@ -1,9 +1,18 @@
 "use client";
 import { useGetEmployees } from "@/services/employees";
+import { ScrollTrigger } from "gsap/all";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export const Team = () => {
   const { data, isFetching } = useGetEmployees();
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 400);
+    }
+  }, [data]);
   return (
     <div className="team mb-[100px]">
       <div className="container">

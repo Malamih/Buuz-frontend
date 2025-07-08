@@ -50,6 +50,9 @@ export const Footer = () => {
               <Link href={"/portfolio"}>Portfolio</Link>
             </li>
             <li className="font-[500] text-2xl">
+              <Link href={"/#our-clients"}>Our clients</Link>
+            </li>
+            <li className="font-[500] text-2xl">
               <Link href={"/contact-us"}>Contact us</Link>
             </li>
           </div>

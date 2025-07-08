@@ -12,9 +12,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusIcon, Trash } from "lucide-react";
+import { Image, PlusIcon, Trash } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Images } from "./Images";
 
 interface Value {
   title: string;
@@ -100,8 +101,13 @@ export const Content = () => {
         </div>
         <div className="texts flex gap-4 flex-wrap">
           {Object.entries(texts).map(([key, value], i: number) => {
-            return <Textarea title={key} value={value as string} key={i} />;
+            return (
+              !key.includes("office_image") && (
+                <Textarea title={key} value={value as string} key={i} />
+              )
+            );
           })}
+          <Images />
           <div className="services mt-8 p-4 min-w-[600px] flex-[1] rounded-sm border border-gray-300">
             <div className="header mb-6 flex w-full justify-between">
               <div className="title">

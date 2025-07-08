@@ -8,6 +8,7 @@ export const getClients = (params: {}) => {
     queryKey: ["clients", params],
     queryFn: endpoint.get,
     meta: { params: { ...params } },
+    retry: false
   });
 };
 

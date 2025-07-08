@@ -19,10 +19,13 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { extractId } from "@/helpers/vimeo";
+import { queryClient } from "@/providers/QueryProvider";
+import { useUpdateHomePageProjects } from "@/services/pages";
 import { useGetPortfoliosByFields } from "@/services/portfolios";
-import { useEditProject } from "@/services/projects";
+import { UpdateResponse, useEditProject } from "@/services/projects";
 import { useGetServices } from "@/services/services";
 import { Project, useFetchVideos } from "@/services/vimeo";
+import { useMainStore } from "@/stores/main";
 import { SelectValue } from "@radix-ui/react-select";
 import { PenIcon } from "lucide-react";
 import Image from "next/image";
@@ -36,13 +39,61 @@ export const Edit = ({
   project: Project;
   refetch: () => void;
 }) => {
+  const { pageContent, setPageContent } = useMainStore((state) => state);
   const [open, setOpen] = useState(false);
   const [type, setType] = useState("");
   const [client, setClient] = useState("");
   const [videoId, setVideoId] = useState("");
-  const success = (msg: string) => {
-    toast.success(msg);
+
+  const {
+    mutate: updateHomePageProjects,
+    isPending: isUpdatingHomePageProjects,
+    error: homePageProjectsError,
+  } = useUpdateHomePageProjects((data) => {
+    toast.success(data.message);
+    setPageContent(data.updated_data);
+  });
+
+  const success = (data: UpdateResponse) => {
+    toast.success(data?.message);
     setOpen(false);
+    const aboutProjects = pageContent?.home?.aboutProjects;
+    const portfolioProjects = pageContent?.home?.portfolioProjects;
+    if (aboutProjects?.length > 0) {
+      const updatedProject = aboutProjects?.find(
+        (project: Project) => project?._id == data?.result?._id
+      );
+      if (updatedProject) {
+        let projectsToUpdate = pageContent?.home?.aboutProjects;
+        let projectIndex = projectsToUpdate.findIndex(
+          (project: Project) => project?._id == updatedProject._id
+        );
+        projectsToUpdate[projectIndex] = data?.result;
+        updateHomePageProjects({
+          section: "aboutProjects",
+          projects: [...projectsToUpdate] as Project[],
+          pageContent,
+        });
+      }
+    }
+    if (portfolioProjects?.length > 0) {
+      const updatedProject = portfolioProjects?.find(
+        (project: Project) => project?._id == data?.result?._id
+      );
+
+      if (updatedProject) {
+        let projectsToUpdate = pageContent?.home?.portfolioProjects;
+        let projectIndex = projectsToUpdate.findIndex(
+          (project: Project) => project?._id == updatedProject._id
+        );
+        projectsToUpdate[projectIndex] = data?.result;
+        updateHomePageProjects({
+          section: "portfolioProjects",
+          projects: [...projectsToUpdate] as Project[],
+          pageContent,
+        });
+      }
+    }
     refetch();
   };
   const { mutate, isPending, error } = useEditProject(success);
@@ -51,6 +102,7 @@ export const Edit = ({
     data,
     isFetching,
     error: video_error,
+    refetch: refetchVideo,
   }: any = useFetchVideos(videoId || project.project_id, "single");
 
   const editProject = (e: any) => {
@@ -81,6 +133,7 @@ export const Edit = ({
 
   const fetchVideo = () => {
     setVideoId(videoIdValue);
+    refetchVideo();
   };
 
   const { data: services, isFetching: isFetchingServices } = useGetServices();
@@ -183,7 +236,7 @@ export const Edit = ({
                         disabled={
                           isFetching ||
                           videoIdValue == project.project_id ||
-                          videoId == extractId(data?.uri)
+                          (data && videoId == extractId(data?.uri))
                         }
                       >
                         {isFetching ? <Loader color="white" /> : "Fetch"}

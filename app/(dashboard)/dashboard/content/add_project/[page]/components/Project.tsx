@@ -7,7 +7,7 @@ import {
 import { useUpdateHomePageProjects } from "@/services/pages";
 import { Project as ProjectType } from "@/services/vimeo";
 import { useMainStore } from "@/stores/main";
-import { MoreVertical, PlusIcon } from "lucide-react";
+import { MoreVertical, PlusIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -59,8 +59,11 @@ export const Project = ({ project }: { project: ProjectType }) => {
             height={100}
             className="rounded-tr-4xl rounded-bl-4xl"
           />
-          <div className="title">
-            <h1 className="font-bold">{project.title}</h1>
+          <div className="title flex flex-col">
+            <h1 className="font-bold flex-[1]">{project.title}</h1>
+            <p className="flex gap-2">
+              <UserIcon width={19} /> {project?.client?.name}
+            </p>
           </div>
         </div>
         <div className="content">

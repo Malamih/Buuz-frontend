@@ -7,6 +7,7 @@ export const useGetPageContent = () => {
   return useQuery({
     queryFn: endpoint.get,
     queryKey: ["pageContent"],
+    retry: false,
   });
 };
 

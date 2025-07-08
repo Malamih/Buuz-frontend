@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { useGetServices } from "@/services/services";
 import { Button } from "@/components/ui/button";
+import { ScrollTrigger } from "gsap/all";
 
 interface Service {
   name: string;
@@ -48,6 +49,9 @@ export const ContactForm = () => {
         return newService;
       });
       setServicesCheckBoxes(servicesWithActive);
+      setTimeout(() => {
+        ScrollTrigger.refresh()
+      }, 400);
     }
   }, [data]);
 

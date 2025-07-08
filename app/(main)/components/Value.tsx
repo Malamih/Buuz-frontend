@@ -2,6 +2,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { getValues } from "@/services/values";
 import clsx from "clsx";
+import { ScrollTrigger } from "gsap/all";
 // import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 
@@ -15,6 +16,9 @@ export const ValueEl = () => {
         i == 0 ? { ...e, active: true } : { ...e, active: false }
       );
       setValues(activeValues);
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 400);
     }
   }, [data]);
 

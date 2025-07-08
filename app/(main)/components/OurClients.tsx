@@ -10,6 +10,7 @@ import {
   useGetPortfoliosByFields,
 } from "@/services/portfolios";
 import clsx from "clsx";
+import { ScrollTrigger } from "gsap/all";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -96,6 +97,11 @@ export const OurClients = () => {
   useEffect(() => {
     if (clients?.payload) {
       setCount(clients?.payload?.length);
+      if (clients) {
+        setTimeout(() => {
+          ScrollTrigger.refresh();
+        }, 400);
+      }
     }
   }, [clients]);
   return (

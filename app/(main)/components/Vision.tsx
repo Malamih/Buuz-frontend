@@ -33,6 +33,12 @@ export const Vision = () => {
   return (
     <section className="vission py-10 bg-white">
       <div className="container">
+        <div className="title mb-8">
+          <h1 className="mb-2 font-bold text-2xl">Our Vision & Values</h1>
+          <p className="font-light text-xl text-center md:text-left">
+            {JSON.stringify(pageContent?.home?.our_vision)}
+          </p>
+        </div>
         <div
           className="vimeo-crop-container bg-gray-500 !pointer-events-none w-full h-[calc(100vh-200px)] relative mb-12 rounded-br-[100px] overflow-hidden"
           ref={playerRef}
@@ -49,10 +55,6 @@ export const Vision = () => {
             ></iframe>
           )}
         </div>
-        <h1 className="mb-4 font-bold text-2xl">Our Vision & Values</h1>
-        <p className="font-light text-xl text-center md:text-left">
-          {JSON.stringify(pageContent?.home?.our_vision)}
-        </p>
       </div>
     </section>
   );

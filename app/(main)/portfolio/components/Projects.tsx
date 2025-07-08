@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { ProjectSkeleton } from "./ProjectSkeleton";
 import clsx from "clsx";
 import { NotFound } from "./Projects-404";
+import { ScrollTrigger } from "gsap/all";
 
 export const Projects = () => {
   const { id } = useParams();
@@ -63,6 +64,11 @@ export const Projects = () => {
   useEffect(() => {
     if (!data?.payload && !error) {
       refetch();
+    }
+    if (data) {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 400);
     }
   }, [data]);
 

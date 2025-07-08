@@ -19,6 +19,7 @@ import { VideoPlayerSkeleton } from "./VideoPlayerSkeleton";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { ScrollTrigger } from "gsap/all";
 
 const getProject = async (id: string) => {
   try {
@@ -48,6 +49,7 @@ export const VimeoPlayer = ({ id }: { id: string }) => {
 
   useEffect(() => {
     const vh = window.innerHeight * 0.01;
+    ScrollTrigger.refresh();
     if (!playerRef.current || !data?.project) return;
     if (player.current) {
       player.current
