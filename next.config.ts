@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // إعدادات إضافية للـ static hosting
+  trailingSlash: true,
   turbopack: {
     rules: {
       "*.svg": {

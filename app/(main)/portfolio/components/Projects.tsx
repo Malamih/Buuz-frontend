@@ -9,6 +9,7 @@ import { ProjectSkeleton } from "./ProjectSkeleton";
 import clsx from "clsx";
 import { NotFound } from "./Projects-404";
 import { ScrollTrigger } from "gsap/all";
+import { useGetServices } from "@/services/services";
 
 export const Projects = () => {
   const { id } = useParams();
@@ -61,6 +62,12 @@ export const Projects = () => {
     type: category,
   });
 
+  const {
+    data: services,
+    isFetching: isFetchingServices,
+    error: servicesError,
+  } = useGetServices();
+
   useEffect(() => {
     if (!data?.payload && !error) {
       refetch();
@@ -71,6 +78,22 @@ export const Projects = () => {
       }, 400);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (services) {
+      const newServices = services?.payload?.map((service) => ({
+        name: service.name,
+        value: service.name,
+        active: false,
+      }));
+      newServices.unshift({
+        name: "All",
+        value: "",
+        active: true,
+      });
+      setCategories(newServices);
+    }
+  }, [services]);
 
   const handleActive = (i: number) => {
     const cats = [...categories];

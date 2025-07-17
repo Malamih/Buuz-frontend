@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { VimeoPlayer } from "../components/Player";
 import { BASE_URL } from "@/lib/apiClient";
 
@@ -5,16 +6,48 @@ export const generateMetadata = async ({
   params,
 }: {
   params: { id: string };
-}) => {
+}): Promise<Metadata> => {
   const res = await fetch(`${BASE_URL}/projects/${params.id}`);
   const data = await res.json();
+
+  const title = data?.project?.title ?? "Project";
+  const clientName = data?.project?.client?.name ?? "Client";
+  const thumbnail = data?.project?.thumbnail ?? "/OG.png"; // fallback if thumbnail missing
+
   return {
-    title: `${data?.project?.title} - BEEZ PRODUCTIONS`,
-    description: `Beez production project for ${data?.project?.client?.name}`,
+    title: `${title} - BEEZ PRODUCTIONS`,
+    description: `Beez Productions project for ${clientName}. High-quality media content produced in Baghdad.`,
+    keywords: [
+      "Beez Productions",
+      "Broadcasting Company",
+      "Media Production",
+      "Video Production",
+      "Audio Production",
+      "Film Production",
+      "Baghdad Media",
+      "Iraq Broadcasting",
+      title,
+      clientName,
+    ],
+    authors: [{ name: "Malamih - شركة ملامح" }],
     openGraph: {
-      title: data?.project?.title,
-      description: `Beez production project for ${data?.project.client?.name}`,
-      images: [data?.project?.thumbnail],
+      title: `${title} - BEEZ PRODUCTIONS`,
+      description: `Beez Productions project for ${clientName}. Produced with excellence in Baghdad.`,
+      type: "video.other",
+      images: [
+        {
+          url: thumbnail,
+          width: 1200,
+          height: 630,
+          alt: `${title} - Beez Productions Thumbnail`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} - BEEZ PRODUCTIONS`,
+      description: `Beez Productions project for ${clientName}.`,
+      images: [thumbnail],
     },
   };
 };
