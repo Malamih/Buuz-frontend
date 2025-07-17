@@ -9,12 +9,10 @@ export const generateMetadata = async ({
 }): Promise<Metadata> => {
   try {
     const res = await fetch(`${BASE_URL}/projects/${params.id}`, {
-      // هذه الخيارات تساعد Next.js في التخزين المؤقت والـ ISR (اختياري)
       next: { revalidate: 60 },
     });
 
     if (!res.ok) {
-      // فشل الاتصال أو المشروع غير موجود
       return {
         title: "Project not found - BEEZ PRODUCTIONS",
         description: "The requested project could not be found.",
@@ -22,25 +20,27 @@ export const generateMetadata = async ({
     }
 
     const data = await res.json();
+    const project = data?.project;
 
-    const title = data?.project?.title ?? "Project";
-    const clientName = data?.project?.client?.name ?? "Client";
-    const thumbnail = data?.project?.thumbnail ?? "/OG.png";
+    if (!project) throw new Error("Project data missing");
 
-    return {
+    const title = project.title || "Project";
+    const clientName = project.client?.name || "Client";
+
+    // بناء رابط الصورة بشكل صحيح
+    const thumbnail = project.thumbnail
+      ? new URL(project.thumbnail, BASE_URL).toString()
+      : new URL("/OG.png", BASE_URL).toString();
+
+    const metadata: Metadata = {
       title: `${title} - BEEZ PRODUCTIONS`,
       description: `Beez Productions project for ${clientName}. High-quality media content produced in Baghdad.`,
       keywords: [
         "Beez Productions",
         "Broadcasting Company",
         "Media Production",
-        "Video Production",
-        "Audio Production",
-        "Film Production",
-        "Baghdad Media",
-        "Iraq Broadcasting",
-        title,
-        clientName,
+        ...(title ? [title] : []),
+        ...(clientName ? [clientName] : []),
       ],
       authors: [{ name: "Malamih - شركة ملامح" }],
       openGraph: {
@@ -55,6 +55,7 @@ export const generateMetadata = async ({
             alt: `${title} - Beez Productions Thumbnail`,
           },
         ],
+        url: new URL(`/projects/${params.id}`, BASE_URL).toString(),
       },
       twitter: {
         card: "summary_large_image",
@@ -63,8 +64,9 @@ export const generateMetadata = async ({
         images: [thumbnail],
       },
     };
+
+    return metadata;
   } catch (error) {
-    // في حال حصل استثناء (مثلاً الشبكة مقطوعة أو API فيه bug)
     return {
       title: "Error - BEEZ PRODUCTIONS",
       description: "An unexpected error occurred while loading the project.",
@@ -74,11 +76,7 @@ export const generateMetadata = async ({
 
 const ProjectPlayer = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
-  return (
-    <>
-      <VimeoPlayer id={id} />
-    </>
-  );
+  return <VimeoPlayer id={id} />;
 };
 
 export default ProjectPlayer;
