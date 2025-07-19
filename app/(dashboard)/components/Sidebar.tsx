@@ -11,9 +11,7 @@ import {
   Building2,
   ClipboardEdit,
   File,
-  FileText,
   MessageCircle,
-  Users,
 } from "lucide-react";
 
 export const Sidebar = () => {
@@ -21,39 +19,39 @@ export const Sidebar = () => {
   const mainLinksGroup = [
     {
       name: "Projects",
-      path: "/dashboard",
+      path: "/dashboard/",
       icon: <ClipboardEdit width={18} />,
     },
-    {
-      name: "Values",
-      path: "/dashboard/values",
-      icon: <BadgeCheck width={18} />,
-    },
+    // {
+    //   name: "Values",
+    //   path: "/dashboard/values/",
+    //   icon: <BadgeCheck width={18} />,
+    // },
     {
       name: "Messages",
-      path: "/dashboard/messages",
+      path: "/dashboard/messages/",
       icon: <MessageCircle width={18} />,
     },
     {
       name: "Employees",
-      path: "/dashboard/employees",
+      path: "/dashboard/employees/",
       icon: <Briefcase width={18} />,
     },
     {
       name: "Clients",
-      path: "/dashboard/clients",
+      path: "/dashboard/clients/",
       icon: <Building2 width={18} />,
     },
   ];
   const pagesLinks = [
     {
       name: "Home",
-      path: "/dashboard/content/home",
+      path: "/dashboard/content/home/",
       icon: <File width={18} />,
     },
     {
       name: "About",
-      path: "/dashboard/content/about",
+      path: "/dashboard/content/about/",
       icon: <File width={18} />,
     },
   ];
