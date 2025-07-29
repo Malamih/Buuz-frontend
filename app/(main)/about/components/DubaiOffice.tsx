@@ -20,9 +20,11 @@ export const DubaiOffice = () => {
       <div className="dubai-office">
         <div className="container flex flex-col xl:flex-row flex-wrap gap-4">
           <div className="title w-full xl:w-[calc(50%-0.5rem)]">
-            <h1 className="mb-2 text-5xl">Our Dubai office</h1>
+            <h1 className="mb-2 text-5xl">
+              {pageContent?.about?.office_section_title}
+            </h1>
             <p className="font-medium text-sm w-full">
-              {pageContent?.about?.our_dubai_office}
+              {pageContent?.about?.office_section_caption}
             </p>
           </div>
           <div className="images w-full xl:w-[calc(50%-0.5rem)] flex flex-wrap gap-2 py-12">
