@@ -14,7 +14,6 @@ export const AboutSection = () => {
 
   const firstCard = useRef<HTMLDivElement>(null);
   const secondCard = useRef<HTMLDivElement>(null);
-  const thirdCard = useRef<HTMLDivElement>(null);
   const lastCard = useRef<HTMLDivElement>(null);
   const container = useRef<HTMLDivElement>(null);
 
@@ -22,7 +21,6 @@ export const AboutSection = () => {
     if (
       !firstCard.current ||
       !secondCard.current ||
-      !thirdCard.current ||
       !lastCard.current ||
       !container.current
     )
@@ -42,15 +40,6 @@ export const AboutSection = () => {
     });
     tl.to(
       secondCard.current,
-      {
-        x: 0,
-        y: 0,
-        opacity: 1,
-      },
-      "<"
-    );
-    tl.to(
-      thirdCard.current,
       {
         x: 0,
         y: 0,
@@ -104,7 +93,7 @@ export const AboutSection = () => {
               className="absolute top-0 left-0 w-full h-full object-cover"
             />
           </div>
-        
+
           <div
             className={twMerge(
               "bg-gray-300 py-10 px-8 translate-x-[300px] opacity-0",
