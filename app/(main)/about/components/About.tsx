@@ -104,19 +104,7 @@ export const AboutSection = () => {
               className="absolute top-0 left-0 w-full h-full object-cover"
             />
           </div>
-          <div
-            className={twMerge(
-              "text-center px-2 py-14 bg-[#0B0B0B] text-white translate-y-[200px] opacity-0",
-              styles.card,
-              styles.card3
-            )}
-            ref={thirdCard}
-          >
-            <h1 className="font-bold text-3xl mb-4 lg:text-5xl">25+</h1>
-            <p className="uppercase font-light text-lg lg:text-xl">
-              Years Of Experiance
-            </p>
-          </div>
+        
           <div
             className={twMerge(
               "bg-gray-300 py-10 px-8 translate-x-[300px] opacity-0",
