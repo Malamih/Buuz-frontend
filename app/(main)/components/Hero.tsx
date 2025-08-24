@@ -84,7 +84,7 @@ export const Hero = () => {
         >
           <iframe
             ref={iframeRef}
-            src={`https://player.vimeo.com/video/${pageContent?.home?.hero_video}?autoplay=1&muted=1&controls=0`}
+            src={`https://player.vimeo.com/video/${pageContent?.home?.hero_video}?autoplay=1&muted=1&controls=0&loop=1`}
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
