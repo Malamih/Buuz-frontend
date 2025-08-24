@@ -39,11 +39,17 @@ export const useFetchVideos = (
   });
 };
 
-export const useFetchVideo = ({ id }: { id: string }) => {
+export const useFetchVideo = ({
+  id,
+  unique,
+}: {
+  id: string;
+  unique?: string;
+}) => {
   const endpoint = new vimeoApiClient<any, any>(`/videos/${id}`);
   return useQuery({
     queryFn: endpoint.get,
-    queryKey: ["vision-video"],
+    queryKey: ["vision-video", id, unique],
     retry: false,
     enabled: false,
   });

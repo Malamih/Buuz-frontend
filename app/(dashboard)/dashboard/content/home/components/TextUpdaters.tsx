@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { useFetchVideo } from "@/services/vimeo";
 import Player from "@vimeo/player";
 import { extractId } from "@/helpers/vimeo";
+import { HeroVideo } from "./HeroVideo";
 
 export const TextUpdaters = () => {
   const { pageContent, setPageContent } = useMainStore((state) => state);
@@ -134,10 +135,12 @@ export const TextUpdaters = () => {
           Save
         </Button>
       </div>
+      <HeroVideo />
       <div className="texts flex gap-4 flex-wrap">
         {Object.entries(texts).map(([key, value], i: number) => {
           return (
-            key != "vision_and_value_video" && (
+            key != "vision_and_value_video" &&
+            key != "hero_video" && (
               <Textarea title={key} value={value as string} key={i} />
             )
           );
